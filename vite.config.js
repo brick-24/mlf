@@ -5,7 +5,9 @@ import react from "@vitejs/plugin-react";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: "/mlf/",
+  // Relative so the build runs from any path: /MLF/, /mlf/, a static host
+  // root, or straight off disk. Avoids hardcoding the repository name.
+  base: "./",
   build: {
     rollupOptions: {
       input: {
