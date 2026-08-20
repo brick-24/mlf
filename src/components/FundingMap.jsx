@@ -1,5 +1,4 @@
 import { useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
 import { geoEqualEarth, geoPath } from "d3-geo";
 import { feature } from "topojson-client";
 import worldAtlas from "world-atlas/countries-110m.json";
@@ -13,21 +12,23 @@ const BASE = import.meta.env.BASE_URL;
 const WIDTH = 960;
 const HEIGHT = 500;
 
-const NO_DATA = "rgba(15, 21, 34, 0.06)";
-const DELIVERY = "#c3d2e3";
-const DELIVERY_HOT = "#2f4a6b";
-const IN_STUDY = "#d6ecea";
-const HOT = "#00a8a3";
+/* Sequential ramp built from the MLF plum (#563061). Categorical keys sit
+   outside the ramp so the two scales are never read as one. */
+const RAMP = ["#d3c2d8", "#a98cb0", "#7b5885", "#563061"];
+const IN_STUDY = "#ece6ee";
+const DELIVERY = "#cfe9ef";
+const NO_DATA = "#ececea";
+const HOVER = "#3d2145";
+const PAPER = "#f7f7f5";
 
-/** outflow (USD billions) → choropleth step */
 const shadeFor = (market) => {
   if (!market) return NO_DATA;
   if (market.role === "delivery") return DELIVERY;
   if (market.outflow === null || market.outflow === undefined) return IN_STUDY;
-  if (market.outflow >= 10) return "#0b6f6b";
-  if (market.outflow >= 1) return "#199a92";
-  if (market.outflow >= 0.3) return "#5cc0b7";
-  return "#9ad9d2";
+  if (market.outflow >= 10) return RAMP[3];
+  if (market.outflow >= 1) return RAMP[2];
+  if (market.outflow >= 0.3) return RAMP[1];
+  return RAMP[0];
 };
 
 /* ---- computed once, at module load ---- */
@@ -57,21 +58,7 @@ const shapes = countries.map((f, index) => {
 
 const shapeById = new Map(shapes.filter((s) => s.market).map((s) => [s.id, s]));
 
-const LEGEND = [
-  { fill: "#0b6f6b", label: "$10B+" },
-  { fill: "#199a92", label: "$1–10B" },
-  { fill: "#5cc0b7", label: "$0.3–1B" },
-  { fill: "#9ad9d2", label: "under $0.3B" },
-  { fill: IN_STUDY, label: "Unspecified" },
-  { fill: DELIVERY, label: "Delivery country" },
-];
-
-const fadeUp = {
-  initial: { opacity: 0, y: 26 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, amount: 0.35 },
-  transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] },
-};
+const RAMP_TICKS = ["<$0.3B", "$0.3–1B", "$1–10B", "$10B+"];
 
 function FundingMap() {
   const frameRef = useRef(null);
@@ -79,8 +66,8 @@ function FundingMap() {
   const currentId = useRef(null);
   const [hoveredId, setHoveredId] = useState(null);
 
-  /* The 177 country paths never change, so they are built once and stay out of
-     the hover render path — that is what keeps the map smooth. */
+  /* The 177 country paths never change, so they are built once and stay out
+     of the hover render path — that is what keeps the map smooth. */
   const staticPaths = useMemo(
     () =>
       shapes.map((shape) => (
@@ -88,8 +75,8 @@ function FundingMap() {
           key={shape.key}
           d={shape.d}
           fill={shape.fill}
-          stroke="#ffffff"
-          strokeWidth={0.55}
+          stroke={PAPER}
+          strokeWidth={0.4}
           data-mid={shape.market ? shape.id : undefined}
           style={{ cursor: shape.market ? "pointer" : "default" }}
         />
@@ -115,7 +102,7 @@ function FundingMap() {
       const y = event.clientY - rect.top;
       const flip = x > rect.width - 120;
       tip.style.transform = `translate(${x}px, ${y}px)`;
-      tip.style.marginLeft = flip ? "-104px" : "14px";
+      tip.style.marginLeft = flip ? "-104px" : "12px";
     }
 
     if (id !== currentId.current) {
@@ -137,38 +124,21 @@ function FundingMap() {
   return (
     <section
       id="funding-geography"
-      className="relative mx-auto w-full max-w-7xl px-6 py-20 md:px-10 lg:px-16 lg:py-24"
+      className="relative mx-auto w-full max-w-7xl px-6 py-16 md:px-10 lg:px-16"
     >
-      <motion.p
-        {...fadeUp}
-        className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500"
-      >
-        Funding Geography
-      </motion.p>
-      <motion.h3
-        {...fadeUp}
-        transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
-        className="font-display text-3xl font-semibold tracking-[-0.03em] text-slate-900 sm:text-4xl lg:text-5xl"
-      >
-        Where the money can come from.
-      </motion.h3>
-      <motion.p
-        {...fadeUp}
-        transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
-        className="mt-5 max-w-2xl text-base leading-relaxed text-slate-600"
-      >
-        Shaded by cross-border philanthropic outflow. Hover for the figure, click
-        for the market dashboard.
-      </motion.p>
+      <div className="max-w-3xl">
+        <h3 className="font-display text-3xl font-semibold tracking-[-0.02em] text-slate-900 sm:text-4xl">
+          $59.8bn leaves the US in cross-border giving each year
+        </h3>
+        <p className="mt-4 text-base leading-relaxed text-slate-600">
+          Almost none of it reaches Malawi. This map shades the twenty donor
+          markets by philanthropic outflow — hover for the figure, select a
+          country for its prospects and channel mix.
+        </p>
+      </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 34 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.85, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
-        className="mt-10 rounded-3xl border border-white/50 bg-white/60 p-4 shadow-glass backdrop-blur-xl md:p-6"
-      >
-        <div ref={frameRef} className="relative">
+      <div className="mt-8 rounded-lg border border-rule bg-white">
+        <div ref={frameRef} className="relative p-3 md:p-5">
           <svg
             viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
             className="block w-full"
@@ -182,11 +152,9 @@ function FundingMap() {
             {hoveredShape ? (
               <path
                 d={hoveredShape.d}
-                fill={
-                  hoveredShape.market.role === "delivery" ? DELIVERY_HOT : HOT
-                }
-                stroke="#ffffff"
-                strokeWidth={0.8}
+                fill={HOVER}
+                stroke={PAPER}
+                strokeWidth={0.6}
                 pointerEvents="none"
               />
             ) : null}
@@ -198,30 +166,66 @@ function FundingMap() {
             className="pointer-events-none absolute left-0 top-0 z-10 will-change-transform"
             style={{ opacity: hoveredShape ? 1 : 0 }}
           >
-            <span className="inline-block translate-y-3 rounded-lg bg-slate-900 px-2.5 py-1.5 font-mono text-xs font-semibold tabular-nums text-white shadow-lg">
+            <span className="inline-block translate-y-2 rounded border border-rule bg-white px-2 py-1 text-xs font-bold tabular-nums text-slate-900 shadow-card">
               {hoveredShape ? outflowLabel(hoveredShape.market) : ""}
             </span>
           </div>
         </div>
 
-        <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-slate-200/70 pt-4 text-[11px] text-slate-600">
-          {LEGEND.map((step) => (
-            <span key={step.label} className="flex items-center gap-2">
+        {/* continuous ramp and categorical keys are separate scales */}
+        <div className="flex flex-wrap items-end gap-x-10 gap-y-5 border-t border-rule px-4 py-4 md:px-6">
+          <div>
+            <p className="mb-2 text-[11px] text-slate-500">
+              Cross-border philanthropic outflow, USD, 2023
+            </p>
+            <div className="flex">
+              {RAMP.map((c) => (
+                <span key={c} className="h-2 w-14" style={{ background: c }} />
+              ))}
+            </div>
+            <div className="mt-1.5 flex">
+              {RAMP_TICKS.map((t) => (
+                <span
+                  key={t}
+                  className="w-14 text-[10px] tabular-nums text-slate-500"
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-slate-200 text-[11px] text-slate-600 md:border-l md:pl-10">
+            <span className="flex items-center gap-2">
               <span
-                className="h-2.5 w-2.5 rounded-sm"
-                style={{ background: step.fill }}
+                className="h-2.5 w-2.5 border border-slate-300"
+                style={{ background: IN_STUDY }}
               />
-              {step.label}
+              Outflow not reported
             </span>
-          ))}
+            <span className="flex items-center gap-2">
+              <span
+                className="h-2.5 w-2.5 border border-slate-300"
+                style={{ background: DELIVERY }}
+              />
+              MLF delivery country
+            </span>
+          </div>
+
           <a
             href={`${BASE}mlf-partners.html`}
-            className="ml-auto text-xs font-semibold text-[color:var(--accent-strong)] hover:underline"
+            className="ml-auto text-sm font-bold text-brand hover:underline"
           >
-            All markets &rarr;
+            All twenty markets &rarr;
           </a>
         </div>
-      </motion.div>
+      </div>
+
+      <p className="mt-3 text-[11px] leading-relaxed text-slate-500">
+        Outflow and share of GNI: Global Philanthropy Tracker, 2023 reference
+        year. Giving rates: CAF World Giving Report. Figures shown as reported;
+        several markets do not publish a cross-border figure.
+      </p>
     </section>
   );
 }

@@ -8,60 +8,84 @@ import {
 
 const BASE = import.meta.env.BASE_URL;
 
-const MIX_TONE = {
-  High: "text-[color:var(--accent-strong)]",
-  Medium: "text-amber-700",
-  Low: "text-slate-400",
-};
+/* containers and interactive controls are deliberately different things */
+const card = "rounded-lg border border-rule bg-white";
+const control =
+  "rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 hover:border-slate-400";
 
-const card =
-  "rounded-2xl border border-white/50 bg-white/60 shadow-glass backdrop-blur-xl";
+const MIX_LEVEL = { High: 3, Medium: 2, Low: 1 };
 
-function Stat({ label, value, sub, tone }) {
+function Wordmark() {
   return (
-    <div className={`${card} p-5`}>
-      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-slate-500">
-        {label}
-      </p>
+    <a href={BASE} className="flex items-baseline gap-2">
+      <span className="font-display text-lg font-bold tracking-[-0.01em] text-brand">
+        MicroLoan Foundation
+      </span>
+      <span className="hidden text-xs text-slate-500 sm:inline">
+        Donor market research
+      </span>
+    </a>
+  );
+}
+
+/** headline metric: bare type on the page, divided by a rule */
+function Metric({ label, value, note, muted }) {
+  return (
+    <div className="min-w-[8.5rem] flex-1 border-slate-200 px-5 first:pl-0 sm:border-l">
+      <p className="text-[11px] text-slate-500">{label}</p>
       <p
-        className={`font-display mt-3 text-3xl font-semibold tracking-[-0.03em] ${
-          tone || "text-slate-900"
+        className={`font-display mt-1.5 text-[32px] font-semibold leading-none tabular-nums tracking-[-0.02em] ${
+          muted ? "text-slate-400" : "text-slate-900"
         }`}
       >
         {value}
       </p>
-      {sub ? <p className="mt-2 text-xs text-slate-500">{sub}</p> : null}
+      {note ? <p className="mt-1.5 text-[11px] text-slate-500">{note}</p> : null}
     </div>
   );
 }
 
-/** Top 3 Institutional / Top 3 Corporate — one engine per column */
-function Engine({ title, items, empty, note }) {
+/** three-segment scale — replaces the High / High / High label triplet */
+function MixBar({ label, level }) {
+  const filled = MIX_LEVEL[level] || 0;
+  return (
+    <div className="flex items-center gap-3">
+      <span className="w-24 text-sm text-slate-600">{label}</span>
+      <span className="flex gap-1" aria-hidden="true">
+        {[1, 2, 3].map((i) => (
+          <span
+            key={i}
+            className="h-1.5 w-8"
+            style={{ background: i <= filled ? "#563061" : "#e4e4e0" }}
+          />
+        ))}
+      </span>
+      <span className="text-xs text-slate-500">{level}</span>
+    </div>
+  );
+}
+
+function ProspectList({ title, items, note, empty }) {
   return (
     <div className={`${card} p-5`}>
-      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-slate-500">
+      <h3 className="text-[11px] font-bold text-slate-500">
         {title}
-      </p>
+      </h3>
       {items && items.length ? (
-        <ol className="mt-4 space-y-0">
-          {items.map((name, i) => (
+        <ul className="mt-3">
+          {items.map((name) => (
             <li
               key={name}
-              className="flex items-baseline gap-3 border-b border-slate-200/60 py-3 last:border-b-0"
+              className="border-b border-slate-100 py-2.5 text-sm leading-snug text-slate-900 last:border-b-0 last:pb-0"
             >
-              <span className="font-mono text-[11px] tabular-nums text-slate-400">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <span className="text-sm font-medium leading-snug text-slate-900">
-                {name}
-              </span>
+              {name}
             </li>
           ))}
-        </ol>
-      ) : note ? (
-        <p className="mt-4 text-sm leading-relaxed text-slate-600">{note}</p>
+        </ul>
       ) : (
-        <p className="mt-4 text-sm leading-relaxed text-slate-400">{empty}</p>
+        <p className="mt-3 text-sm leading-relaxed text-slate-500">
+          {note || empty}
+        </p>
       )}
     </div>
   );
@@ -80,10 +104,11 @@ function MarketDashboard() {
   const [sort, setSort] = useState({ key: null, dir: 1 });
 
   useEffect(() => {
-    document.title = `${market ? market.name : "Donor markets"} — MicroLoan Foundation`;
+    document.title = market
+      ? `${market.name} — donor market profile | MicroLoan Foundation`
+      : "Donor market matrix | MicroLoan Foundation";
   }, [market]);
 
-  /* ---------------- all markets ---------------- */
   const allRows = useMemo(
     () =>
       Object.entries(marketsByCountry)
@@ -124,63 +149,96 @@ function MarketDashboard() {
   const columns = [
     ["name", "Country"],
     ["outflow", "Outflow"],
-    ["cafIncome", "CAF (% income)"],
-    ["fit", "MLF fit"],
+    ["cafIncome", "Giving, % income"],
+    ["fit", "Fit"],
     ["mix", "Channel mix"],
-    ["institutional", "Top institutional"],
-    ["corporate", "Top corporate"],
+    ["institutional", "Institutional prospects"],
+    ["corporate", "Corporate prospects"],
   ];
 
+  const Chrome = (
+    <header className="mb-10 flex flex-wrap items-center gap-4 border-b border-rule pb-5">
+      <Wordmark />
+      <div className="flex-1" />
+      <a href={`${BASE}#funding-geography`} className={control}>
+        &larr; Map
+      </a>
+      <select
+        value={countryId ?? ""}
+        onChange={(e) => {
+          window.location.search = e.target.value ? `?c=${e.target.value}` : "";
+        }}
+        className={control}
+      >
+        <option value="">All markets</option>
+        {Object.entries(marketsByCountry)
+          .sort(([, a], [, b]) => a.name.localeCompare(b.name))
+          .map(([id, m]) => (
+            <option key={id} value={id}>
+              {m.name}
+            </option>
+          ))}
+      </select>
+    </header>
+  );
+
+  const Sources = (
+    <p className="mt-8 border-t border-rule pt-4 text-[11px] leading-relaxed text-slate-500">
+      <span className="font-bold text-slate-600">Sources.</span> Cross-border
+      outflow and share of GNI: Global Philanthropy Tracker, 2023 reference
+      year. Giving as a share of income and participation rates: CAF World
+      Giving Report. Africa and gender allocations: OECD Private Philanthropy
+      for Development. Fit score and channel mix are the research team&rsquo;s
+      qualitative assessment, not a computed index. Markets marked as not
+      reported do not publish a cross-border figure.
+    </p>
+  );
+
+  /* ---------------- all markets ---------------- */
   if (isGlobal) {
     return (
-      <main className="mx-auto w-full max-w-7xl px-6 py-10 md:px-10 lg:px-16">
-        <TopBar countryId={null} />
-        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
-          Donor Market Matrix
-        </p>
-        <h1 className="font-display text-4xl font-semibold tracking-[-0.035em] text-slate-900 sm:text-5xl">
-          Twenty markets, ranked.
-        </h1>
-        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-500">
-          Cross-border outflow, giving propensity, MLF fit and named prospects
-          for each market. Sorted by outflow; click any row for the full
-          dashboard.
-        </p>
+      <main className="mx-auto w-full max-w-7xl px-6 py-8 md:px-10 lg:px-16">
+        {Chrome}
+        <div className="max-w-3xl">
+          <h1 className="font-display text-4xl font-semibold tracking-[-0.02em] text-slate-900">
+            Twenty donor markets, ranked by outflow
+          </h1>
+          <p className="mt-3 text-sm leading-relaxed text-slate-600">
+            Cross-border giving, generosity, fit and named prospects for each
+            market. Select a row for the full profile.
+          </p>
+        </div>
 
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
-          <h2 className="font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">
-            Markets
-            <span className="ml-2 font-semibold text-slate-900">
-              {visible.length} / {allRows.length}
-            </span>
-          </h2>
+          <p className="text-sm text-slate-600">
+            <span className="font-bold text-slate-900">{visible.length}</span> of{" "}
+            {allRows.length} markets
+          </p>
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="FILTER…"
-            className={`${card} px-4 py-2 font-mono text-xs text-slate-800 placeholder:tracking-[0.1em] placeholder:text-slate-400`}
+            placeholder="Search markets"
+            className={`${control} w-56`}
           />
         </div>
 
         <div className={`mt-3 overflow-hidden ${card}`}>
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[1000px] border-collapse font-mono">
+            <table className="w-full min-w-[1000px] border-collapse">
               <thead>
                 <tr>
                   {columns.map(([key, label]) => (
                     <th
                       key={key}
                       onClick={onSort(key)}
-                      className={`cursor-pointer select-none whitespace-nowrap border-b border-slate-200/70 px-5 py-4 text-left text-[10px] font-medium uppercase tracking-[0.16em] hover:text-slate-900 ${
+                      className={`cursor-pointer select-none whitespace-nowrap border-b border-rule px-5 py-3 text-left text-[11px] font-bold hover:text-slate-900 ${
                         sort.key === key ? "text-slate-900" : "text-slate-500"
                       }`}
                     >
                       {label}
                       {sort.key === key ? (
-                        <span className="pl-1 text-[8px]">
-                          {sort.dir > 0 ? "▲" : "▼"}
-                        </span>
+                        <span className="pl-1">{sort.dir > 0 ? "▲" : "▼"}</span>
                       ) : null}
                     </th>
                   ))}
@@ -193,56 +251,65 @@ function MarketDashboard() {
                     onClick={() => {
                       window.location.href = `${BASE}mlf-partners.html?c=${m.id}`;
                     }}
-                    className="group cursor-pointer border-b border-slate-200/50 transition-colors last:border-b-0 hover:bg-white/70"
+                    className="cursor-pointer border-b border-slate-100 last:border-b-0 hover:bg-slate-50"
                   >
-                    <td className="whitespace-nowrap px-5 py-4">
-                      <span className="text-[13px] font-semibold tracking-tight text-slate-900">
+                    <td className="whitespace-nowrap px-5 py-3">
+                      <span className="text-sm font-bold text-slate-900">
                         {m.name}
                       </span>
-                      <span className="ml-2 text-[10px] uppercase tracking-[0.1em] text-slate-400">
+                      <span className="ml-2 text-[11px] text-slate-500">
                         {m.region}
                       </span>
                     </td>
-                    <td className="whitespace-nowrap px-5 py-4 text-xs tabular-nums text-slate-700">
+                    <td className="whitespace-nowrap px-5 py-3 text-sm tabular-nums text-slate-800">
                       {outflowLabel(m)}
                       {m.gni ? (
-                        <span className="ml-1 text-slate-400">({m.gni})</span>
+                        <span className="ml-1 text-slate-400">{m.gni}</span>
                       ) : null}
                     </td>
-                    <td className="whitespace-nowrap px-5 py-4 text-xs tabular-nums text-slate-600">
+                    <td className="whitespace-nowrap px-5 py-3 text-sm tabular-nums text-slate-700">
                       {m.cafIncome ? `${m.cafIncome}%` : "—"}
                     </td>
-                    <td className="whitespace-nowrap px-5 py-4 text-xs font-semibold tabular-nums text-slate-900">
-                      {m.fit}/5
+                    <td className="whitespace-nowrap px-5 py-3 text-sm font-bold tabular-nums text-slate-900">
+                      {m.fit}
                     </td>
-                    <td className="whitespace-nowrap px-5 py-4 text-[11px] uppercase tracking-[0.06em]">
+                    <td className="whitespace-nowrap px-5 py-3">
                       {m.mix ? (
-                        <>
-                          <span className={MIX_TONE[m.mix.inst]}>
-                            {m.mix.inst[0]}
-                          </span>
-                          <span className="text-slate-300"> / </span>
-                          <span className={MIX_TONE[m.mix.corp]}>
-                            {m.mix.corp[0]}
-                          </span>
-                          <span className="text-slate-300"> / </span>
-                          <span className={MIX_TONE[m.mix.rec]}>
-                            {m.mix.rec[0]}
-                          </span>
-                        </>
+                        <span className="flex items-center gap-1">
+                          {[m.mix.inst, m.mix.corp, m.mix.rec].map((lvl, i) => (
+                            <span
+                              key={i}
+                              title={
+                                ["Institutional", "Corporate", "Recurring"][i] +
+                                ": " +
+                                lvl
+                              }
+                              className="flex gap-px"
+                            >
+                              {[1, 2, 3].map((n) => (
+                                <span
+                                  key={n}
+                                  className="h-3 w-1"
+                                  style={{
+                                    background:
+                                      n <= (MIX_LEVEL[lvl] || 0)
+                                        ? "#563061"
+                                        : "#e4e4e0",
+                                  }}
+                                />
+                              ))}
+                            </span>
+                          ))}
+                        </span>
                       ) : (
                         "—"
                       )}
                     </td>
-                    <td className="px-5 py-4 text-[11px] text-slate-500">
-                      {m.institutional?.length
-                        ? m.institutional.join(", ")
-                        : "Not researched"}
+                    <td className="px-5 py-3 text-[12px] text-slate-600">
+                      {m.institutional?.length ? m.institutional.join(", ") : "—"}
                     </td>
-                    <td className="px-5 py-4 text-[11px] text-slate-500">
-                      {m.corporate?.length
-                        ? m.corporate.join(", ")
-                        : "Not researched"}
+                    <td className="px-5 py-3 text-[12px] text-slate-600">
+                      {m.corporate?.length ? m.corporate.join(", ") : "—"}
                     </td>
                   </tr>
                 ))}
@@ -251,121 +318,101 @@ function MarketDashboard() {
           </div>
         </div>
 
-        <p className="mt-4 text-xs leading-relaxed text-slate-500">
-          Channel mix reads Institutional / Corporate / Recurring. Sources:
-          Global Philanthropy Tracker 2026, OECD Private Philanthropy for
-          Development 2026, CAF World Giving Report.
+        <p className="mt-3 text-[11px] text-slate-500">
+          Channel mix bars read Institutional / Corporate / Recurring, one to
+          three segments.
         </p>
+        {Sources}
       </main>
     );
   }
 
-  /* ---------------- single market ---------------- */
+  /* ---------------- one market ---------------- */
   const inStudy = market.fit !== null && market.fit !== undefined;
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-6 py-10 md:px-10 lg:px-16">
-      <TopBar countryId={countryId} />
+    <main className="mx-auto w-full max-w-7xl px-6 py-8 md:px-10 lg:px-16">
+      {Chrome}
 
-      <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
-        {market.region}
-      </p>
-      <h1 className="font-display text-4xl font-semibold tracking-[-0.035em] text-slate-900 sm:text-5xl">
+      <p className="text-[11px] text-slate-500">{market.region}</p>
+      <h1 className="font-display mt-1 text-4xl font-semibold tracking-[-0.02em] text-slate-900">
         {market.name}
       </h1>
-      {inStudy ? (
-        <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-600">
-          {market.rationale}
-        </p>
-      ) : (
-        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-500">
-          {market.outflowNote || "Not part of the 20-market donor study."}
-        </p>
-      )}
+      <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-slate-600">
+        {inStudy
+          ? market.rationale
+          : market.outflowNote || "Not part of the twenty-market donor study."}
+      </p>
 
       {inStudy ? (
         <>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <Stat
-              label="Cash outflow"
+          <div className="mt-8 flex flex-wrap gap-y-6 border-y border-rule py-6">
+            <Metric
+              label="Cross-border outflow"
               value={outflowLabel(market)}
-              sub={market.gni ? `${market.gni} of GNI` : "Share of GNI unspecified"}
+              note={market.gni ? `${market.gni} of GNI` : "Share of GNI not reported"}
+              muted={market.outflow === null}
             />
-            <Stat
-              label="CAF giving (% income)"
+            <Metric
+              label="Given as share of income"
               value={market.cafIncome ? `${market.cafIncome}%` : "—"}
-              sub={market.cafPopulation || "Not reported for this market"}
-              tone={market.cafIncome ? "text-amber-700" : "text-slate-400"}
+              note={market.cafPopulation || "Not reported"}
+              muted={!market.cafIncome}
             />
-            <Stat
-              label="MLF fit"
-              value={`${market.fit}/5`}
-              sub={`Channel mix ${market.mix.inst} / ${market.mix.corp} / ${market.mix.rec}`}
+            <Metric
+              label="Fit for MLF, 1–5"
+              value={market.fit}
+              note="Qualitative analyst score"
             />
           </div>
 
-          <div className={`mt-4 ${card} p-5`}>
-            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-slate-500">
-              Channel mix
-            </p>
-            <div className="mt-4 grid gap-4 sm:grid-cols-3">
-              {[
-                ["Institutional", market.mix.inst],
-                ["Corporate", market.mix.corp],
-                ["Recurring", market.mix.rec],
-              ].map(([label, level]) => (
-                <div
-                  key={label}
-                  className="flex items-baseline justify-between gap-3 border-b border-slate-200/60 pb-3 sm:border-b-0 sm:pb-0"
-                >
-                  <span className="text-sm text-slate-600">{label}</span>
-                  <span
-                    className={`font-mono text-sm font-semibold uppercase tracking-[0.1em] ${MIX_TONE[level]}`}
-                  >
-                    {level}
-                  </span>
-                </div>
-              ))}
+          <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,20rem)_1fr]">
+            <div>
+              <h2 className="text-[11px] font-bold text-slate-500">
+                Recommended channel mix
+              </h2>
+              <div className="mt-4 space-y-3">
+                <MixBar label="Institutional" level={market.mix.inst} />
+                <MixBar label="Corporate" level={market.mix.corp} />
+                <MixBar label="Recurring" level={market.mix.rec} />
+              </div>
             </div>
-          </div>
 
-          <div className="mt-4 grid gap-4 lg:grid-cols-3">
-            <Engine
-              title="Top 3 institutional prospects"
-              items={market.institutional}
-              empty="Not yet researched for this market."
-            />
-            <Engine
-              title="Top 3 corporate prospects"
-              items={market.corporate}
-              empty="Not yet researched for this market."
-            />
-            <Engine
-              title="Recurring / diaspora"
-              note={market.diaspora}
-              empty="No diaspora note recorded."
-            />
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <ProspectList
+                title="Institutional prospects"
+                items={market.institutional}
+                empty="Not yet researched for this market."
+              />
+              <ProspectList
+                title="Corporate prospects"
+                items={market.corporate}
+                empty="Not yet researched for this market."
+              />
+              <ProspectList
+                title="Recurring and diaspora"
+                note={market.diaspora}
+                empty="No diaspora note recorded."
+              />
+            </div>
           </div>
         </>
       ) : null}
 
       {market.partners?.length ? (
         <div className="mt-10">
-          <h2 className="font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">
+          <h2 className="text-[11px] font-bold text-slate-500">
             Already funding MLF
-            <span className="ml-2 font-semibold text-slate-900">
-              {market.partners.length}
-            </span>
           </h2>
           <div className={`mt-3 overflow-hidden ${card}`}>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[700px] border-collapse font-mono">
+              <table className="w-full min-w-[640px] border-collapse">
                 <thead>
                   <tr>
-                    {["#", "Partner", "Type", "Channel", "Basis"].map((h) => (
+                    {["Partner", "Type", "Channel", "Basis"].map((h) => (
                       <th
                         key={h}
-                        className="whitespace-nowrap border-b border-slate-200/70 px-5 py-4 text-left text-[10px] font-medium uppercase tracking-[0.16em] text-slate-500"
+                        className="whitespace-nowrap border-b border-rule px-5 py-3 text-left text-[11px] font-bold text-slate-500"
                       >
                         {h}
                       </th>
@@ -373,43 +420,34 @@ function MarketDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {market.partners.map((p, i) => (
+                  {market.partners.map((p) => (
                     <tr
                       key={p.name}
-                      className="border-b border-slate-200/50 last:border-b-0 hover:bg-white/70"
+                      className="border-b border-slate-100 last:border-b-0"
                     >
-                      <td className="px-5 py-4 text-xs tabular-nums text-slate-400">
-                        {String(i + 1).padStart(2, "0")}
-                      </td>
-                      <td className="px-5 py-4">
+                      <td className="px-5 py-3">
                         <span className="flex items-center gap-3">
                           {p.domain ? (
                             <img
                               src={partnerLogo(p.domain)}
                               alt=""
                               loading="lazy"
-                              className="h-7 w-7 flex-none rounded-md border border-slate-200/70 bg-white object-contain p-1"
+                              className="h-6 w-6 flex-none rounded-sm border border-slate-200 bg-white object-contain p-0.5"
                             />
-                          ) : (
-                            <span className="grid h-7 w-7 flex-none place-items-center rounded-md bg-slate-100 text-[8.5px] font-bold text-slate-500">
-                              {p.tag || p.name.slice(0, 3).toUpperCase()}
-                            </span>
-                          )}
-                          <span className="whitespace-nowrap text-[13px] font-medium text-slate-900">
+                          ) : null}
+                          <span className="whitespace-nowrap text-sm font-bold text-slate-900">
                             {p.name}
                           </span>
                         </span>
                       </td>
-                      <td className="whitespace-nowrap px-5 py-4 text-[11px] uppercase tracking-[0.06em] text-slate-600">
+                      <td className="whitespace-nowrap px-5 py-3 text-[12px] text-slate-600">
                         {p.kind}
                       </td>
-                      <td className="whitespace-nowrap px-5 py-4 text-[11px] uppercase tracking-[0.06em] text-slate-600">
+                      <td className="whitespace-nowrap px-5 py-3 text-[12px] text-slate-600">
                         {p.channel}
                       </td>
-                      <td className="whitespace-nowrap px-5 py-4">
-                        <span className="border-b border-current pb-0.5 text-[11px] uppercase tracking-[0.1em] text-[color:var(--accent-strong)]">
-                          {p.basis}
-                        </span>
+                      <td className="whitespace-nowrap px-5 py-3 text-[12px] text-slate-600">
+                        {p.basis}
                       </td>
                     </tr>
                   ))}
@@ -420,38 +458,11 @@ function MarketDashboard() {
         </div>
       ) : null}
 
-      <p className="mt-6 text-xs leading-relaxed text-slate-500">{market.source}</p>
+      <p className="mt-6 text-[12px] leading-relaxed text-slate-500">
+        {market.source}
+      </p>
+      {Sources}
     </main>
-  );
-}
-
-function TopBar({ countryId }) {
-  return (
-    <div className="mb-10 flex flex-wrap items-center gap-3">
-      <a
-        href={`${BASE}#funding-geography`}
-        className={`${card} px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-white`}
-      >
-        &larr; Back to the map
-      </a>
-      <div className="flex-1" />
-      <select
-        value={countryId ?? ""}
-        onChange={(e) => {
-          window.location.search = e.target.value ? `?c=${e.target.value}` : "";
-        }}
-        className={`${card} px-4 py-2 text-sm font-semibold text-slate-800`}
-      >
-        <option value="">All markets</option>
-        {Object.entries(marketsByCountry)
-          .sort(([, a], [, b]) => a.name.localeCompare(b.name))
-          .map(([id, m]) => (
-            <option key={id} value={id}>
-              {m.name}
-            </option>
-          ))}
-      </select>
-    </div>
   );
 }
 

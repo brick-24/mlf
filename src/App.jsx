@@ -297,18 +297,12 @@ function App() {
       </section>
 
       <section className="relative mx-auto w-full max-w-7xl px-6 py-24 md:px-10 lg:px-16 lg:py-32">
-        <motion.p
-          {...fadeUp}
-          className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500"
-        >
-          The Impact
-        </motion.p>
         <motion.h2
           {...fadeUp}
           transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
           className="font-display text-4xl font-semibold tracking-[-0.03em] text-slate-900 sm:text-5xl lg:text-6xl"
         >
-          Scale that feels personal.
+          575,000 women, one loan at a time
         </motion.h2>
 
         <div className="mt-12 grid gap-6 lg:grid-cols-2">
@@ -342,18 +336,12 @@ function App() {
       <FundingMap />
 
       <section className="relative mx-auto w-full max-w-7xl px-6 pb-8 pt-8 md:px-10 lg:px-16 lg:pb-16 lg:pt-10">
-        <motion.p
-          {...fadeUp}
-          className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500"
-        >
-          Key Partners
-        </motion.p>
         <motion.h3
           {...fadeUp}
           transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
           className="font-display text-3xl font-semibold tracking-[-0.03em] text-slate-900 sm:text-4xl lg:text-5xl"
         >
-          Built with world-class impact collaborators.
+          Who we build with
         </motion.h3>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -390,18 +378,12 @@ function App() {
       </section>
 
       <section className="relative mx-auto w-full max-w-7xl px-6 py-20 md:px-10 lg:px-16 lg:py-24">
-        <motion.p
-          {...fadeUp}
-          className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500"
-        >
-          News & Blog
-        </motion.p>
         <motion.h4
           {...fadeUp}
           transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
           className="font-display text-3xl font-semibold tracking-[-0.03em] text-slate-900 sm:text-4xl lg:text-5xl"
         >
-          Latest thinking, campaigns, and updates.
+          Latest thinking, campaigns and updates
         </motion.h4>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -449,7 +431,7 @@ function App() {
             }}
             className="font-display mt-4 text-3xl font-semibold tracking-[-0.03em] sm:text-4xl lg:text-5xl"
           >
-            Stories of women building their own future.
+            She repaid the loan in eleven months. Then she hired her neighbour.
           </motion.h4>
 
           <div className="mt-8 grid gap-6 lg:grid-cols-[1.05fr_1fr]">
