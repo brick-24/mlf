@@ -14,8 +14,8 @@
   --accent-strong: #0b7f7b;
   --hero-overlay: linear-gradient(
     180deg,
-    rgba(5, 10, 24, 0.24) 0%,
-    rgba(5, 10, 24, 0.78) 100%
+    rgba(5, 10, 24, 0.24) 100%,
+    rgba(5, 10, 24, 0.78) 98%
   );
 }
 
