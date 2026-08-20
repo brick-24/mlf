@@ -12,14 +12,18 @@ export default {
       },
       colors: {
         brand: {
-          DEFAULT: "#563061", // plum, from the MLF theme stylesheet
-          deep: "#3d2145",
+          DEFAULT: "#5c2c54", // plum, from the MLF theme stylesheet
+          deep: "#2f1430",
           soft: "#bd93ca",
           teal: "#32b2ca",
           gold: "#eea526",
         },
-        paper: "#f7f7f5",
-        rule: "#e4e4e0",
+        ink: "#1a1418",
+        paper: {
+          DEFAULT: "#f6f5f2",
+          deep: "#edebe5",
+        },
+        rule: "rgba(26, 20, 24, 0.10)",
       },
       boxShadow: {
         // borders carry the structure on a flat canvas; shadows stay minimal

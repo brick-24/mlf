@@ -695,3 +695,113 @@ export const outflowLabel = (market) => {
     ? `$${market.outflow}bn`
     : `$${(market.outflow * 1000).toFixed(0)}m`;
 };
+
+/**
+ * Domains for named prospects, so the register can show real marks rather
+ * than monograms. Only organisations whose primary domain is unambiguous are
+ * listed; anything absent falls back to a lettermark.
+ */
+const PROSPECT_DOMAINS = {
+  "Gates Foundation": "gatesfoundation.org",
+  "Ford Foundation": "fordfoundation.org",
+  "Rockefeller Foundation": "rockefellerfoundation.org",
+  Google: "google.com",
+  Microsoft: "microsoft.com",
+  JPMorgan: "jpmorganchase.com",
+  "Wellcome Trust": "wellcome.org",
+  "Comic Relief": "comicrelief.com",
+  BP: "bp.com",
+  HSBC: "hsbc.com",
+  Unilever: "unilever.com",
+  "Volkswagen Foundation": "volkswagenstiftung.de",
+  "Siemens Foundation": "siemens-stiftung.org",
+  Siemens: "siemens.com",
+  "Deutsche Bank": "db.com",
+  SAP: "sap.com",
+  "Mastercard Foundation": "mastercardfdn.org",
+  "Aga Khan Development Network": "akdn.org",
+  RBC: "rbc.com",
+  "TD Bank": "td.com",
+  Shopify: "shopify.com",
+  "Jacobs Foundation": "jacobsfoundation.org",
+  Novartis: "novartis.com",
+  Nestlé: "nestle.com",
+  Roche: "roche.com",
+  "Toyota Foundation": "toyotafound.or.jp",
+  "Nippon Foundation": "nippon-foundation.or.jp",
+  Toyota: "toyota.com",
+  Sony: "sony.com",
+  SoftBank: "softbank.jp",
+  "Fondation de France": "fondationdefrance.org",
+  "L’Oréal": "loreal.com",
+  "BNP Paribas": "bnpparibas.com",
+  Orange: "orange.com",
+  "IKEA Foundation (NL)": "ikeafoundation.org",
+  "Adessium Foundation": "adessium.org",
+  ING: "ing.com",
+  Philips: "philips.com",
+  Shell: "shell.com",
+  "Paul Ramsay Foundation": "paulramsayfoundation.org.au",
+  "Myer Foundation": "myerfoundation.org.au",
+  "Macquarie Group": "macquarie.com",
+  BHP: "bhp.com",
+  QBE: "qbe.com",
+  Samsung: "samsung.com",
+  Hyundai: "hyundai.com",
+  LG: "lg.com",
+  "Emirates Foundation": "emiratesfoundation.ae",
+  Emaar: "emaar.com",
+  "Emirates Airline": "emirates.com",
+  "DP World": "dpworld.com",
+  "Qatar Foundation": "qf.org.qa",
+  "Qatar Airways": "qatarairways.com",
+  Ooredoo: "ooredoo.qa",
+  "Tata Trusts": "tatatrusts.org",
+  "Azim Premji Foundation": "azimpremjifoundation.org",
+  "Reliance Foundation": "reliancefoundation.org",
+  Infosys: "infosys.com",
+  TCS: "tcs.com",
+  "Adani Group": "adani.com",
+  "Tencent Charity Foundation": "tencent.com",
+  "Alibaba Philanthropy": "alibaba.com",
+  Huawei: "huawei.com",
+  Alibaba: "alibaba.com",
+  "Ping An": "pingan.com",
+  "Anglo American": "angloamerican.com",
+  MTN: "mtn.com",
+  "Standard Bank": "standardbank.com",
+  "Dangote Foundation": "dangote.com",
+  "Tony Elumelu Foundation": "tonyelumelufoundation.org",
+  USAID: "usaid.gov",
+  "Access Bank": "accessbankplc.com",
+  "MTN Nigeria": "mtnonline.com",
+  "Zenith Bank": "zenithbank.com",
+  "Safaricom Foundation": "safaricom.co.ke",
+  "Equity Bank Foundation": "equitygroupholdings.com",
+  Safaricom: "safaricom.co.ke",
+  KenGen: "kengen.co.ke",
+  Petrobras: "petrobras.com.br",
+  Vale: "vale.com",
+  "Santander Brasil": "santander.com.br",
+  "Carlos Slim Foundation": "fundacioncarlosslim.org",
+  "FEMSA Foundation": "femsa.com",
+  Cemex: "cemex.com",
+  "América Móvil": "americamovil.com",
+  "BBVA Mexico": "bbva.mx",
+  "La Caixa Foundation": "fundacionlacaixa.org",
+  "BBVA Microfinance": "fundacionmicrofinanzasbbva.org",
+  "Banco Santander": "santander.com",
+  Inditex: "inditex.com",
+  Telefónica: "telefonica.com",
+};
+
+export const prospectDomain = (name) => PROSPECT_DOMAINS[name] || null;
+
+/** Rank of a market by outflow, among those that report one. */
+export const outflowRanking = () => {
+  const ranked = Object.entries(marketsByCountry)
+    .filter(([, m]) => typeof m.outflow === "number")
+    .sort((a, b) => b[1].outflow - a[1].outflow)
+    .map(([id]) => Number(id));
+  return { order: ranked, total: ranked.length };
+};

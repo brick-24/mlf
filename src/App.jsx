@@ -296,13 +296,14 @@ function App() {
         </motion.div>
       </section>
 
-      <section className="relative mx-auto w-full max-w-7xl px-6 py-24 md:px-10 lg:px-16 lg:py-32">
+      <section className="relative border-t border-rule bg-paper py-24">
+        <div className="mx-auto w-full max-w-7xl px-6 md:px-10 lg:px-16">
         <motion.h2
           {...fadeUp}
           transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
           className="font-display text-4xl font-semibold tracking-[-0.03em] text-slate-900 sm:text-5xl lg:text-6xl"
         >
-          575,000 women, one loan at a time
+          Small loans, repaid and lent again
         </motion.h2>
 
         <div className="mt-12 grid gap-6 lg:grid-cols-2">
@@ -331,11 +332,13 @@ function App() {
             </motion.article>
           ))}
         </div>
+        </div>
       </section>
 
       <FundingMap />
 
-      <section className="relative mx-auto w-full max-w-7xl px-6 pb-8 pt-8 md:px-10 lg:px-16 lg:pb-16 lg:pt-10">
+      <section className="relative border-t border-rule bg-paper py-24">
+        <div className="mx-auto w-full max-w-7xl px-6 md:px-10 lg:px-16">
         <motion.h3
           {...fadeUp}
           transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
@@ -375,9 +378,11 @@ function App() {
             </motion.article>
           ))}
         </div>
+        </div>
       </section>
 
-      <section className="relative mx-auto w-full max-w-7xl px-6 py-20 md:px-10 lg:px-16 lg:py-24">
+      <section className="relative border-t border-rule bg-paper-deep py-24">
+        <div className="mx-auto w-full max-w-7xl px-6 md:px-10 lg:px-16">
         <motion.h4
           {...fadeUp}
           transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
@@ -412,13 +417,28 @@ function App() {
             </motion.article>
           ))}
         </div>
+        </div>
       </section>
 
-      <section className="relative mx-auto w-full max-w-7xl px-6 pb-14 pt-2 md:px-10 lg:px-16 lg:pb-20">
-        <div className="rounded-3xl border border-slate-200 bg-slate-950 p-7 text-white shadow-[0_28px_80px_rgba(5,10,24,0.25)] sm:p-10">
+      <section className="relative isolate overflow-hidden text-white">
+        <img
+          src={placeholderStory}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 -z-20 h-full w-full object-cover object-center"
+        />
+        <div
+          className="absolute inset-0 -z-10"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(47,20,48,0.94) 0%, rgba(47,20,48,0.78) 45%, rgba(47,20,48,0.35) 75%, rgba(47,20,48,0.15) 100%)",
+          }}
+        />
+        <div className="mx-auto w-full max-w-7xl px-6 py-24 md:px-10 lg:px-16">
+          <div className="max-w-2xl">
           <motion.p
             {...fadeUp}
-            className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-200/70"
+            className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/60"
           >
             Empowered Women
           </motion.p>
@@ -434,13 +454,8 @@ function App() {
             She repaid the loan in eleven months. Then she hired her neighbour.
           </motion.h4>
 
-          <div className="mt-8 grid gap-6 lg:grid-cols-[1.05fr_1fr]">
-            <img
-              src={placeholderStory}
-              alt="Featured entrepreneur"
-              className="h-64 w-full rounded-2xl object-cover shadow-[0_16px_42px_rgba(0,0,0,0.35)] sm:h-80"
-            />
-            <div className="space-y-4">
+          <div className="mt-8">
+            <div className="space-y-3">
               {empoweredWomenStories.map((story, index) => (
                 <motion.article
                   key={story.name}
@@ -452,22 +467,24 @@ function App() {
                     delay: 0.05 * index,
                     ease: [0.22, 1, 0.36, 1],
                   }}
-                  className="rounded-2xl border border-white/15 bg-white/5 p-4"
+                  className="rounded border border-white/15 bg-white/[0.06] p-4 backdrop-blur-sm"
                 >
                   <p className="text-sm font-semibold tracking-tight text-white">
                     {story.name}
                   </p>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-300">
+                  <p className="mt-2 text-sm leading-relaxed text-white/75">
                     {story.summary}
                   </p>
                 </motion.article>
               ))}
             </div>
           </div>
+          </div>
         </div>
       </section>
 
-      <section className="relative mx-auto w-full max-w-7xl px-6 pb-8 md:px-10 lg:px-16 lg:pb-14">
+      <section className="relative border-t border-rule bg-paper py-24">
+        <div className="mx-auto w-full max-w-7xl px-6 md:px-10 lg:px-16">
         <motion.div
           initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -507,15 +524,17 @@ function App() {
             </button>
           </form>
         </motion.div>
+        </div>
       </section>
 
-      <section className="relative mx-auto w-full max-w-7xl px-6 pb-10 pt-16 md:px-10 lg:px-16">
+      <section className="relative border-t border-rule bg-paper-deep py-24">
+        <div className="mx-auto w-full max-w-7xl px-6 md:px-10 lg:px-16">
         <div className="min-h-[255vh] rounded-[2.2rem] bg-slate-950/96 px-6 py-14 text-white sm:px-10 lg:px-14">
           <div className="grid gap-10 lg:grid-cols-[minmax(280px,0.85fr)_1.15fr]">
             <div className="lg:sticky lg:top-20 lg:h-fit">
               <motion.p
                 {...fadeUp}
-                className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-600"
+                className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand"
               >
                 How It Works
               </motion.p>
@@ -573,6 +592,7 @@ function App() {
               ))}
             </div>
           </div>
+        </div>
         </div>
       </section>
 
@@ -654,7 +674,8 @@ function App() {
         ) : null}
       </AnimatePresence>
 
-      <section className="mx-auto mt-8 w-full max-w-7xl px-6 pb-16 pt-14 text-center md:px-10 lg:px-16 lg:pb-24">
+      <section className="relative border-t border-rule bg-paper py-24">
+        <div className="mx-auto w-full max-w-7xl px-6 md:px-10 lg:px-16">
         <motion.div
           initial={{ opacity: 0, y: 36 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -662,7 +683,7 @@ function App() {
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           className="rounded-[2.25rem] border border-white/60 bg-white/70 px-8 py-16 shadow-glass backdrop-blur-xl"
         >
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
+          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand">
             Final Call
           </p>
           <h5 className="font-display mt-5 text-4xl font-semibold tracking-[-0.03em] text-slate-900 sm:text-5xl lg:text-6xl">
@@ -686,6 +707,7 @@ function App() {
           MicroLoan Foundation UK · Presentation Concept · Built for judging
           panel showcase
         </footer>
+        </div>
       </section>
     </main>
   );

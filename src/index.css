@@ -5,24 +5,30 @@
 @tailwind utilities;
 
 :root {
-  /* Palette taken from microloanfoundation.org.uk's own theme stylesheet */
-  --brand: #563061;        /* plum — primary */
-  --brand-deep: #3d2145;
-  --brand-soft: #bd93ca;
-  --brand-teal: #32b2ca;   /* secondary */
-  --brand-gold: #eea526;   /* accent, used sparingly */
+  /* Warm neutrals so the darks sit in the same family as the paper.
+     Plum is taken from microloanfoundation.org.uk's own stylesheet. */
+  --paper: #f6f5f2;
+  --paper-deep: #edebe5;
+  --ink: #1a1418;
+  --plum: #5c2c54;
+  --plum-deep: #2f1430;
+  --rule: rgba(26, 20, 24, 0.1);
 
-  --bg-soft: #f7f7f5;
-  --ink: #1e1e1e;
-  --muted: #5b5b60;
-  --line: #e4e4e0;
-  --glass: rgba(255, 255, 255, 0.18);
-  --accent: #563061;
-  --accent-strong: #3d2145;
+  --brand: var(--plum);
+  --brand-deep: var(--plum-deep);
+  --brand-soft: #bd93ca;
+  --brand-teal: #32b2ca;
+  --brand-gold: #eea526;
+
+  --bg-soft: var(--paper);
+  --muted: #6b6169;
+  --line: var(--rule);
+  --accent: var(--plum);
+  --accent-strong: var(--plum-deep);
   --hero-overlay: linear-gradient(
     180deg,
-    rgba(5, 10, 24, 0.24) 0%,
-    rgba(5, 10, 24, 0.78) 100%
+    rgba(26, 20, 24, 0.22) 0%,
+    rgba(26, 20, 24, 0.8) 100%
   );
 }
 
