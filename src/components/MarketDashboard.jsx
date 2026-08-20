@@ -248,13 +248,13 @@ function MarketDashboard() {
   /* ---------------- all markets ---------------- */
   if (isGlobal) {
     return (
-      <main className="mx-auto w-full max-w-7xl px-6 py-8 md:px-10 lg:px-16">
+      <main className="shell py-8">
         {Chrome}
         <div className="max-w-3xl">
           <h1 className="font-display text-4xl font-semibold tracking-[-0.02em] text-ink">
             Twenty donor markets, ranked by outflow
           </h1>
-          <p className="mt-3 text-sm leading-relaxed text-ink/70">
+          <p className="measure mt-3 text-sm leading-relaxed text-ink/70">
             Cross-border giving, generosity, fit and named prospects for each
             market. Select a row for the full profile.
           </p>
@@ -393,7 +393,7 @@ function MarketDashboard() {
       : "No named prospects yet — commission prospect research before approaching.";
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-6 py-8 md:px-10 lg:px-16">
+    <main className="shell py-8">
       {Chrome}
 
       <div className="flex flex-wrap items-start justify-between gap-6">
@@ -402,7 +402,7 @@ function MarketDashboard() {
           <h1 className="font-display mt-1 text-4xl font-semibold tracking-[-0.02em] text-ink">
             {market.name}
           </h1>
-          <p className="mt-3 text-[15px] leading-relaxed text-ink/70">
+          <p className="measure mt-3 text-[15px] leading-relaxed text-ink/70">
             {inStudy
               ? market.rationale
               : market.outflowNote ||

@@ -103,22 +103,22 @@ const newsAndBlogPosts = [
     title:
       "Beyond the Loan: Why lasting change takes more than access to finance",
     snippet:
-      "When people hear the term microfinance, they often think of one thing: a small loan....",
+      "People hear microfinance and think of one thing: a small loan. The loan is the least of it.",
   },
   {
     title: "Microfinance under fire - and why the reality is more complex",
     snippet:
-      "I read the recent criticism of microfinance with a mix of recognition and discomfort. Recognition,...",
+      "Recent criticism of microfinance deserves an honest answer rather than a defensive one.",
   },
   {
     title: "Improved donation system to be implemented",
     snippet:
-      "MicroLoan Foundation are moving to an improved donation processing system. To best utilise the generous...",
+      "We are moving to a new donation processing system so that more of every gift reaches the field.",
   },
   {
     title: "Matched funding | Double your impact today through matched giving",
     snippet:
-      "Right now, a woman is working hard to provide for her family, but without access...",
+      "Matched giving doubles every pound for a limited window. Here is where it goes.",
   },
   {
     title: "The Quiet Revolution: Women's Financial Empowerment in Action",
@@ -128,7 +128,7 @@ const newsAndBlogPosts = [
   {
     title: "Invest in a woman. Transform a generation.",
     snippet:
-      "Across Malawi, Zambia, Zimbabwe, and South Africa, women are facing an escalating crisis: a severe...",
+      "Across Malawi, Zambia, Zimbabwe and South Africa, women are meeting a deepening food and income crisis.",
   },
 ];
 
@@ -136,17 +136,17 @@ const empoweredWomenStories = [
   {
     name: "Breaking the Cycle: Lydia's Story",
     summary:
-      "International Women's Day is a global moment to celebrate the incredible achievements of women. However,...",
+      "International Women’s Day celebrates what women achieve. Lydia’s story is about what it took to get there.",
   },
   {
     name: "Lavick's Story",
     summary:
-      "I appreciate that MicroLoan has improved my business. It has helped me cover my children's...",
+      "MicroLoan improved my business. It has helped me cover my children’s school fees, and I have started saving.",
   },
   {
     name: "Closing the gap: Invest in women who are building the future",
     summary:
-      "Meet Roselinah Motloung: Once struggling to feed her family, Roselinah is now building a more...",
+      "Roselinah Motloung once struggled to feed her family. She now runs a business that supports all six of them.",
   },
 ];
 
@@ -236,7 +236,7 @@ function App() {
 
   return (
     <main className="overflow-x-clip">
-      <section ref={heroRef} className="relative h-screen w-full">
+      <section ref={heroRef} className="relative min-h-[100svh] w-full">
         <img
           src={mainBackground}
           alt="Women entrepreneurs"
@@ -250,7 +250,7 @@ function App() {
 
         <motion.div
           style={{ y: heroTranslate, opacity: heroFade }}
-          className="relative z-10 mx-auto flex h-full w-full max-w-7xl flex-col justify-center px-6 pb-12 pt-28 text-white md:px-10 lg:px-16"
+          className="shell relative z-10 flex h-full flex-col justify-center pb-12 pt-28 text-white"
         >
           <motion.p
             initial={{ opacity: 0, y: 16 }}
@@ -265,7 +265,7 @@ function App() {
             initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.05, delay: 0.22 }}
-            className="font-display text-5xl font-semibold leading-[0.95] tracking-[-0.04em] text-white sm:text-6xl md:text-7xl lg:text-[5.6rem]"
+            className="font-display display-xl font-semibold tracking-[-0.03em] text-white"
           >
             Empowering Women.
             <br />
@@ -297,40 +297,38 @@ function App() {
       </section>
 
       <section className="relative border-t border-rule bg-paper py-24">
-        <div className="mx-auto w-full max-w-7xl px-6 md:px-10 lg:px-16">
+        <div className="shell">
         <motion.h2
           {...fadeUp}
           transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
-          className="font-display text-4xl font-semibold tracking-[-0.03em] text-slate-900 sm:text-5xl lg:text-6xl"
+          className="font-display display-lg font-semibold tracking-[-0.02em] text-ink"
         >
           Small loans, repaid and lent again
         </motion.h2>
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-2">
-          {impactStats.map((stat, index) => (
-            <motion.article
-              key={stat.label}
-              initial={{ opacity: 0, y: 42 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.35 }}
-              transition={{
-                duration: 0.82,
-                delay: 0.12 + index * 0.12,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="rounded-3xl border border-white/50 bg-white/60 p-8 shadow-glass backdrop-blur-xl md:p-10"
-            >
-              <p className="font-display text-5xl font-semibold tracking-[-0.045em] text-slate-900 sm:text-6xl lg:text-7xl">
-                {stat.value}
-              </p>
-              <p className="mt-3 text-xl font-semibold tracking-tight text-slate-800">
-                {stat.label}
-              </p>
-              <p className="mt-5 max-w-md text-base leading-relaxed text-slate-600">
-                {stat.detail}
-              </p>
-            </motion.article>
-          ))}
+        <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_22rem] lg:gap-16">
+          <p className="measure text-lg leading-relaxed text-ink/70">
+            A loan of around £80 buys stock, tools or seed. It is repaid over
+            a year into a local fund and lent again to the next woman in the
+            group, so the same capital keeps working long after the first
+            business is standing.
+          </p>
+
+          <dl className="divide-y divide-rule border-y border-rule">
+            {impactStats.map((stat) => (
+              <div key={stat.label} className="py-6 first:pt-0 last:pb-0">
+                <dt className="font-display text-[clamp(2.25rem,3.2vw,3rem)] font-semibold leading-none tracking-[-0.03em] text-ink">
+                  {stat.value}
+                </dt>
+                <dd className="mt-2 text-base font-bold text-ink">
+                  {stat.label}
+                </dd>
+                <dd className="mt-1.5 text-sm leading-relaxed text-ink/65">
+                  {stat.detail}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
         </div>
       </section>
@@ -338,11 +336,11 @@ function App() {
       <FundingMap />
 
       <section className="relative border-t border-rule bg-paper py-24">
-        <div className="mx-auto w-full max-w-7xl px-6 md:px-10 lg:px-16">
+        <div className="shell">
         <motion.h3
           {...fadeUp}
           transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
-          className="font-display text-3xl font-semibold tracking-[-0.03em] text-slate-900 sm:text-4xl lg:text-5xl"
+          className="font-display display-lg font-semibold tracking-[-0.02em] text-ink"
         >
           Who we build with
         </motion.h3>
@@ -382,11 +380,11 @@ function App() {
       </section>
 
       <section className="relative border-t border-rule bg-paper-deep py-24">
-        <div className="mx-auto w-full max-w-7xl px-6 md:px-10 lg:px-16">
+        <div className="shell">
         <motion.h4
           {...fadeUp}
           transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
-          className="font-display text-3xl font-semibold tracking-[-0.03em] text-slate-900 sm:text-4xl lg:text-5xl"
+          className="font-display display-lg font-semibold tracking-[-0.02em] text-ink"
         >
           Latest thinking, campaigns and updates
         </motion.h4>
@@ -420,71 +418,68 @@ function App() {
         </div>
       </section>
 
-      <section className="relative isolate overflow-hidden text-white">
-        <img
-          src={placeholderStory}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 -z-20 h-full w-full object-cover object-center"
-        />
-        <div
-          className="absolute inset-0 -z-10"
-          style={{
-            background:
-              "linear-gradient(90deg, rgba(47,20,48,0.94) 0%, rgba(47,20,48,0.78) 45%, rgba(47,20,48,0.35) 75%, rgba(47,20,48,0.15) 100%)",
-          }}
-        />
-        <div className="mx-auto w-full max-w-7xl px-6 py-24 md:px-10 lg:px-16">
-          <div className="max-w-2xl">
-          <motion.p
-            {...fadeUp}
-            className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/60"
-          >
-            Empowered Women
-          </motion.p>
-          <motion.h4
-            {...fadeUp}
-            transition={{
-              duration: 0.86,
-              ease: [0.22, 1, 0.36, 1],
-              delay: 0.06,
-            }}
-            className="font-display mt-4 text-3xl font-semibold tracking-[-0.03em] sm:text-4xl lg:text-5xl"
-          >
-            She repaid the loan in eleven months. Then she hired her neighbour.
-          </motion.h4>
-
-          <div className="mt-8">
-            <div className="space-y-3">
-              {empoweredWomenStories.map((story, index) => (
-                <motion.article
-                  key={story.name}
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{
-                    duration: 0.62,
-                    delay: 0.05 * index,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                  className="rounded border border-white/15 bg-white/[0.06] p-4 backdrop-blur-sm"
-                >
-                  <p className="text-sm font-semibold tracking-tight text-white">
-                    {story.name}
-                  </p>
-                  <p className="mt-2 text-sm leading-relaxed text-white/75">
-                    {story.summary}
-                  </p>
-                </motion.article>
-              ))}
+      {/* Split panel: the photograph is never tinted, so skin tones stay
+          true. Text lives entirely on the solid plum side. */}
+      <section className="relative isolate bg-brand-deep text-white">
+        <div className="grid lg:grid-cols-[42%_58%]">
+          <div className="relative z-10 order-2 flex items-center px-6 py-20 lg:order-1 lg:py-28 lg:pl-[max(1.5rem,calc((100vw-1440px)/2+clamp(1.5rem,4vw,4rem)))] lg:pr-14">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/55">
+                Empowered Women
+              </p>
+              <h4 className="font-display display-lg mt-4 font-semibold tracking-[-0.02em]">
+                She repaid the loan in eleven months. Then she hired her
+                neighbour.
+              </h4>
+              <p className="measure mt-6 text-base leading-relaxed text-white/75">
+                Every loan is repaid into a local fund and lent again. Three
+                women, in their own words, below.
+              </p>
             </div>
           </div>
+
+          <div className="relative order-1 min-h-[18rem] lg:order-2 lg:min-h-0">
+            <img
+              src={placeholderStory}
+              alt="Members of a MicroLoan Foundation trust group"
+              className="h-full w-full object-cover object-top"
+            />
+            {/* narrow seam only, so the image itself stays untouched */}
+            <div
+              aria-hidden="true"
+              className="absolute inset-y-0 left-0 hidden w-[120px] lg:block"
+              style={{
+                background:
+                  "linear-gradient(90deg, #2f1430 0%, rgba(47,20,48,0) 100%)",
+              }}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* the cards were unreadable over the photograph — they sit on paper */}
+      <section className="relative border-t border-rule bg-paper py-24">
+        <div className="shell">
+          <div className="grid gap-6 md:grid-cols-3">
+            {empoweredWomenStories.map((story) => (
+              <article
+                key={story.name}
+                className="rounded-lg border border-rule bg-white p-6"
+              >
+                <h5 className="font-display text-lg font-semibold leading-snug tracking-[-0.01em] text-ink">
+                  {story.name}
+                </h5>
+                <p className="mt-3 text-sm leading-relaxed text-ink/70">
+                  {story.summary}
+                </p>
+              </article>
+            ))}
           </div>
         </div>
       </section>
 
       <section className="relative border-t border-rule bg-paper py-24">
-        <div className="mx-auto w-full max-w-7xl px-6 md:px-10 lg:px-16">
+        <div className="shell">
         <motion.div
           initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -528,7 +523,7 @@ function App() {
       </section>
 
       <section className="relative border-t border-rule bg-paper-deep py-24">
-        <div className="mx-auto w-full max-w-7xl px-6 md:px-10 lg:px-16">
+        <div className="shell">
         <div className="min-h-[255vh] rounded-[2.2rem] bg-slate-950/96 px-6 py-14 text-white sm:px-10 lg:px-14">
           <div className="grid gap-10 lg:grid-cols-[minmax(280px,0.85fr)_1.15fr]">
             <div className="lg:sticky lg:top-20 lg:h-fit">
@@ -675,7 +670,7 @@ function App() {
       </AnimatePresence>
 
       <section className="relative border-t border-rule bg-paper py-24">
-        <div className="mx-auto w-full max-w-7xl px-6 md:px-10 lg:px-16">
+        <div className="shell">
         <motion.div
           initial={{ opacity: 0, y: 36 }}
           whileInView={{ opacity: 1, y: 0 }}

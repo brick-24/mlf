@@ -85,3 +85,40 @@ body {
     opacity: 0;
   }
 }
+
+/* ---- layout system -------------------------------------------------
+   One shell for section content, a wider measure cap for prose, and a
+   bleed escape for bands that should run edge to edge. max-w-7xl left
+   ~40% of a 1920 display empty; this fills ~68% and keeps text readable. */
+.shell {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 1440px;
+  padding-inline: clamp(1.5rem, 4vw, 4rem);
+}
+
+.shell-wide {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 1720px;
+  padding-inline: clamp(1rem, 2.5vw, 2.5rem);
+}
+
+.bleed {
+  width: 100%;
+}
+
+/* prose only — never on tables, grids or figures */
+.measure {
+  max-width: 68ch;
+}
+
+.display-xl {
+  font-size: clamp(2.5rem, 4.5vw, 4.25rem);
+  line-height: 1.03;
+}
+
+.display-lg {
+  font-size: clamp(2rem, 3.4vw, 3.25rem);
+  line-height: 1.06;
+}
