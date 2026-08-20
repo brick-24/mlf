@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import { geoCentroid, geoEqualEarth, geoPath } from "d3-geo";
+import { geoEqualEarth, geoPath } from "d3-geo";
 import { feature } from "topojson-client";
 import worldAtlas from "world-atlas/countries-110m.json";
 import {
@@ -62,9 +62,11 @@ const shapes = countries.map((f, index) => {
 
 const shapeById = new Map(shapes.filter((s) => s.market).map((s) => [s.id, s]));
 
-/* anchor for the annotation that ties the headline figure to the map */
-const usFeature = countries.find((f) => normaliseId(f.id) === 840);
-const usPoint = usFeature ? projection(geoCentroid(usFeature)) : null;
+/* Annotation anchors. The label sits in open Pacific and the leader runs
+   up-right into the US west coast, so it crosses no shaded country and
+   nothing overlaps Alaska. */
+const labelPoint = projection([-142, 4]);
+const leaderEnd = projection([-119, 40]);
 
 const RAMP_TICKS = ["<$0.3bn", "$0.3–1bn", "$1–10bn", "$10bn+"];
 
@@ -132,22 +134,24 @@ function FundingMap() {
       id="funding-geography"
       className="relative flex min-h-[100svh] flex-col justify-center border-t border-rule bg-paper-deep py-12"
     >
-      <div className="shell">
-        <h3 className="font-display display-lg max-w-[20ch] font-semibold tracking-[-0.02em] text-ink">
-          $59.8bn leaves the US in cross-border giving each year
-        </h3>
-        <p className="measure mt-4 text-lg leading-relaxed text-ink/70">
-          Almost none of it reaches Malawi.
-        </p>
-      </div>
-
-      {/* the map is the centrepiece, so it runs wider than the prose */}
-      <div className="shell-wide mt-6">
+      {/* the map is the centrepiece; the headline sits over its dead ocean */}
+      <div className="shell-wide">
         <div className="mx-auto max-w-[1400px]">
+        {/* Overlaying this on the map was measured and rejected: the
+            top-left of an equal-earth world is North America, not ocean, so
+            the type landed on Canada and the US. */}
+        <h3 className="font-display display-lg mb-5 max-w-[30ch] font-semibold tracking-[-0.02em] text-ink">
+          $59.8bn a year.
+          <br />
+          Almost none reaches Malawi.
+        </h3>
+
         <div ref={frameRef} className="relative">
           <svg
             viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+            preserveAspectRatio="xMidYMid meet"
             className="block w-full"
+            style={{ maxHeight: "58svh" }}
             role="img"
             aria-label="World map shaded by cross-border philanthropic outflow"
             onMouseMove={handleMove}
@@ -166,39 +170,41 @@ function FundingMap() {
             ) : null}
 
             {/* ties the headline figure to the country it describes */}
-            {usPoint ? (
+            {labelPoint && leaderEnd ? (
               <g pointerEvents="none">
                 <line
-                  x1={usPoint[0] - 6}
-                  y1={usPoint[1] - 6}
-                  x2={usPoint[0] - 70}
-                  y2={usPoint[1] - 54}
-                  stroke="#2f1430"
-                  strokeWidth={0.8}
+                  x1={labelPoint[0] + 4}
+                  y1={labelPoint[1] - 12}
+                  x2={leaderEnd[0]}
+                  y2={leaderEnd[1]}
+                  stroke="#5c2c54"
+                  strokeWidth={0.9}
                 />
                 <circle
-                  cx={usPoint[0] - 6}
-                  cy={usPoint[1] - 6}
-                  r={2}
-                  fill="#2f1430"
+                  cx={leaderEnd[0]}
+                  cy={leaderEnd[1]}
+                  r={2.2}
+                  fill="#5c2c54"
                 />
                 <text
-                  x={usPoint[0] - 74}
-                  y={usPoint[1] - 58}
-                  textAnchor="end"
-                  fontSize="19"
+                  x={labelPoint[0]}
+                  y={labelPoint[1] + 6}
+                  textAnchor="middle"
+                  fontFamily="'Source Serif 4', Georgia, serif"
+                  fontSize="21"
                   fontWeight="600"
-                  fill="#2f1430"
+                  fill="#5c2c54"
                 >
                   $59.8bn
                 </text>
                 <text
-                  x={usPoint[0] - 74}
-                  y={usPoint[1] - 44}
-                  textAnchor="end"
-                  fontSize="10"
+                  x={labelPoint[0]}
+                  y={labelPoint[1] + 20}
+                  textAnchor="middle"
+                  fontFamily="Lato, system-ui, sans-serif"
+                  fontSize="9.5"
                   fill="#1a1418"
-                  fillOpacity="0.6"
+                  fillOpacity="0.65"
                 >
                   United States, 0.22% of GNI
                 </text>
