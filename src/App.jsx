@@ -5,6 +5,7 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
+import FundingMap from "./components/FundingMap";
 import mainBackground from "./assets/main-background.png";
 import placeholderLoan from "./assets/placeholder-loan.jpg";
 import placeholderTraining from "./assets/placeholder-training.jpg";
@@ -337,6 +338,8 @@ function App() {
           ))}
         </div>
       </section>
+
+      <FundingMap />
 
       <section className="relative mx-auto w-full max-w-7xl px-6 pb-8 pt-8 md:px-10 lg:px-16 lg:pb-16 lg:pt-10">
         <motion.p
