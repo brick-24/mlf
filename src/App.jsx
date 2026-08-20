@@ -13,7 +13,7 @@ import placeholderStory from "./assets/placeholder.jpg";
 
 const impactStats = [
   {
-    value: "400,000+",
+    value: "575,000+",
     label: "Women Supported",
     detail:
       "Capital and mentorship helping women launch resilient small businesses.",
