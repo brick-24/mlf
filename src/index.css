@@ -1,22 +1,42 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --bg-soft: #f3f3ef;
-  --ink: #0f1522;
-  --muted: #4f5b73;
-  --line: rgba(255, 255, 255, 0.24);
-  --glass: rgba(255, 255, 255, 0.18);
-  --accent: #00a8a3;
-  --accent-strong: #0b7f7b;
+  /* Warm neutrals so the darks sit in the same family as the paper.
+     Plum is taken from microloanfoundation.org.uk's own stylesheet. */
+  --paper: #f6f5f2;
+  --paper-deep: #edebe5;
+  --ink: #1a1418;
+  --plum: #5c2c54;
+  --plum-deep: #2f1430;
+  --rule: rgba(26, 20, 24, 0.1);
+
+  --brand: var(--plum);
+  --brand-deep: var(--plum-deep);
+  --brand-soft: #bd93ca;
+  --brand-teal: #32b2ca;
+  --brand-gold: #eea526;
+
+  --bg-soft: var(--paper);
+  --muted: #6b6169;
+  --line: var(--rule);
+  --accent: var(--plum);
+  --accent-strong: var(--plum-deep);
   --hero-overlay: linear-gradient(
-    180deg,
-    rgba(5, 10, 24, 0.24) 100%,
-    rgba(5, 10, 24, 0.78) 98%
-  );
+      90deg,
+      rgba(15, 12, 18, 0.78) 0%,
+      rgba(15, 12, 18, 0.45) 55%,
+      rgba(15, 12, 18, 0.15) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(15, 12, 18, 0.35) 0%,
+      transparent 40%,
+      rgba(15, 12, 18, 0.65) 100%
+    );
 }
 
 * {
@@ -31,20 +51,9 @@ body,
 
 body {
   margin: 0;
-  font-family: "Manrope", system-ui, sans-serif;
+  font-family: "Lato", system-ui, sans-serif;
   color: var(--ink);
-  background:
-    radial-gradient(
-      circle at 12% 12%,
-      rgba(206, 233, 255, 0.7),
-      transparent 42%
-    ),
-    radial-gradient(
-      circle at 90% 12%,
-      rgba(255, 237, 211, 0.7),
-      transparent 36%
-    ),
-    var(--bg-soft);
+  background: var(--bg-soft);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -82,4 +91,41 @@ body {
     transform: translate(-50%, -50%) scale(1);
     opacity: 0;
   }
+}
+
+/* ---- layout system -------------------------------------------------
+   One shell for section content, a wider measure cap for prose, and a
+   bleed escape for bands that should run edge to edge. max-w-7xl left
+   ~40% of a 1920 display empty; this fills ~68% and keeps text readable. */
+.shell {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 1440px;
+  padding-inline: clamp(1.5rem, 4vw, 4rem);
+}
+
+.shell-wide {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 1720px;
+  padding-inline: clamp(1rem, 2.5vw, 2.5rem);
+}
+
+.bleed {
+  width: 100%;
+}
+
+/* prose only — never on tables, grids or figures */
+.measure {
+  max-width: 68ch;
+}
+
+.display-xl {
+  font-size: clamp(2.5rem, 4.5vw, 4.25rem);
+  line-height: 1.03;
+}
+
+.display-lg {
+  font-size: clamp(2rem, 3.4vw, 3.25rem);
+  line-height: 1.06;
 }

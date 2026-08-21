@@ -1,5 +1,4 @@
 import { useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
 import { geoEqualEarth, geoPath } from "d3-geo";
 import { feature } from "topojson-client";
 import worldAtlas from "world-atlas/countries-110m.json";
@@ -10,35 +9,42 @@ import {
 } from "../data/fundingGeography";
 
 const BASE = import.meta.env.BASE_URL;
-const WIDTH = 960;
-const HEIGHT = 500;
+const WIDTH = 1000;
+const HEIGHT = 440;
 
-const NO_DATA = "rgba(15, 21, 34, 0.06)";
-const DELIVERY = "#c3d2e3";
-const DELIVERY_HOT = "#2f4a6b";
-const IN_STUDY = "#d6ecea";
-const HOT = "#00a8a3";
+/* Ramp darkened at the light end so all four steps survive a projector. */
+const RAMP = ["#cbb0c4", "#a87c9e", "#7c4c72", "#5c2c54"];
+const IN_STUDY = "#e3d8e0";
+const DELIVERY = "#c2d9df";
+const NO_DATA = "#e0ddd6";
+const HOVER = "#2f1430";
+const PAPER = "#edebe5";
 
-/** outflow (USD billions) → choropleth step */
 const shadeFor = (market) => {
   if (!market) return NO_DATA;
   if (market.role === "delivery") return DELIVERY;
   if (market.outflow === null || market.outflow === undefined) return IN_STUDY;
-  if (market.outflow >= 10) return "#0b6f6b";
-  if (market.outflow >= 1) return "#199a92";
-  if (market.outflow >= 0.3) return "#5cc0b7";
-  return "#9ad9d2";
+  if (market.outflow >= 10) return RAMP[3];
+  if (market.outflow >= 1) return RAMP[2];
+  if (market.outflow >= 0.3) return RAMP[1];
+  return RAMP[0];
 };
 
 /* ---- computed once, at module load ---- */
-const countries = feature(worldAtlas, worldAtlas.objects.countries).features;
+const ANTARCTICA = 10;
+const countries = feature(
+  worldAtlas,
+  worldAtlas.objects.countries,
+).features.filter((f) => normaliseId(f.id) !== ANTARCTICA);
 
+/* fit to the remaining land rather than the whole sphere, so dropping
+   Antarctica actually reclaims the vertical space */
 const projection = geoEqualEarth().fitExtent(
   [
-    [12, 14],
-    [WIDTH - 12, HEIGHT - 14],
+    [10, 10],
+    [WIDTH - 10, HEIGHT - 10],
   ],
-  { type: "Sphere" },
+  { type: "FeatureCollection", features: countries },
 );
 const toPath = geoPath(projection);
 
@@ -46,7 +52,6 @@ const shapes = countries.map((f, index) => {
   const id = normaliseId(f.id);
   const market = marketsByCountry[id];
   return {
-    // a handful of world-atlas features carry no id, so fall back to the index
     key: Number.isNaN(id) ? `shape-${index}` : String(id),
     id,
     d: toPath(f),
@@ -57,21 +62,13 @@ const shapes = countries.map((f, index) => {
 
 const shapeById = new Map(shapes.filter((s) => s.market).map((s) => [s.id, s]));
 
-const LEGEND = [
-  { fill: "#0b6f6b", label: "$10B+" },
-  { fill: "#199a92", label: "$1–10B" },
-  { fill: "#5cc0b7", label: "$0.3–1B" },
-  { fill: "#9ad9d2", label: "under $0.3B" },
-  { fill: IN_STUDY, label: "Unspecified" },
-  { fill: DELIVERY, label: "Delivery country" },
-];
+/* Annotation anchors. The label sits in open Pacific and the leader runs
+   up-right into the US west coast, so it crosses no shaded country and
+   nothing overlaps Alaska. */
+const labelPoint = projection([-142, 4]);
+const leaderEnd = projection([-119, 40]);
 
-const fadeUp = {
-  initial: { opacity: 0, y: 26 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, amount: 0.35 },
-  transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] },
-};
+const RAMP_TICKS = ["<$0.3bn", "$0.3–1bn", "$1–10bn", "$10bn+"];
 
 function FundingMap() {
   const frameRef = useRef(null);
@@ -79,7 +76,7 @@ function FundingMap() {
   const currentId = useRef(null);
   const [hoveredId, setHoveredId] = useState(null);
 
-  /* The 177 country paths never change, so they are built once and stay out of
+  /* The country paths never change, so they are built once and stay out of
      the hover render path — that is what keeps the map smooth. */
   const staticPaths = useMemo(
     () =>
@@ -88,8 +85,8 @@ function FundingMap() {
           key={shape.key}
           d={shape.d}
           fill={shape.fill}
-          stroke="#ffffff"
-          strokeWidth={0.55}
+          stroke={PAPER}
+          strokeWidth={0.4}
           data-mid={shape.market ? shape.id : undefined}
           style={{ cursor: shape.market ? "pointer" : "default" }}
         />
@@ -99,8 +96,6 @@ function FundingMap() {
 
   const hoveredShape = hoveredId === null ? null : shapeById.get(hoveredId);
 
-  /* One delegated handler for the whole map. It moves the tooltip by writing
-     to the DOM directly, and only calls setState when the country changes. */
   const handleMove = (event) => {
     const frame = frameRef.current;
     const tip = tipRef.current;
@@ -115,7 +110,7 @@ function FundingMap() {
       const y = event.clientY - rect.top;
       const flip = x > rect.width - 120;
       tip.style.transform = `translate(${x}px, ${y}px)`;
-      tip.style.marginLeft = flip ? "-104px" : "14px";
+      tip.style.marginLeft = flip ? "-104px" : "12px";
     }
 
     if (id !== currentId.current) {
@@ -137,41 +132,26 @@ function FundingMap() {
   return (
     <section
       id="funding-geography"
-      className="relative mx-auto w-full max-w-7xl px-6 py-20 md:px-10 lg:px-16 lg:py-24"
+      className="relative flex min-h-[100svh] flex-col justify-center border-t border-rule bg-paper-deep py-12"
     >
-      <motion.p
-        {...fadeUp}
-        className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500"
-      >
-        Funding Geography
-      </motion.p>
-      <motion.h3
-        {...fadeUp}
-        transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
-        className="font-display text-3xl font-semibold tracking-[-0.03em] text-slate-900 sm:text-4xl lg:text-5xl"
-      >
-        Where the money can come from.
-      </motion.h3>
-      <motion.p
-        {...fadeUp}
-        transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
-        className="mt-5 max-w-2xl text-base leading-relaxed text-slate-600"
-      >
-        Shaded by cross-border philanthropic outflow. Hover for the figure, click
-        for the market dashboard.
-      </motion.p>
+      {/* the map is the centrepiece; the headline sits over its dead ocean */}
+      <div className="shell-wide">
+        <div className="mx-auto max-w-[1400px]">
+        {/* Overlaying this on the map was measured and rejected: the
+            top-left of an equal-earth world is North America, not ocean, so
+            the type landed on Canada and the US. */}
+        <h3 className="font-display display-lg mb-5 max-w-[30ch] font-semibold tracking-[-0.02em] text-ink">
+          $59.8bn a year.
+          <br />
+          Almost none reaches Malawi.
+        </h3>
 
-      <motion.div
-        initial={{ opacity: 0, y: 34 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.85, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
-        className="mt-10 rounded-3xl border border-white/50 bg-white/60 p-4 shadow-glass backdrop-blur-xl md:p-6"
-      >
         <div ref={frameRef} className="relative">
           <svg
             viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+            preserveAspectRatio="xMidYMid meet"
             className="block w-full"
+            style={{ maxHeight: "58svh" }}
             role="img"
             aria-label="World map shaded by cross-border philanthropic outflow"
             onMouseMove={handleMove}
@@ -182,46 +162,134 @@ function FundingMap() {
             {hoveredShape ? (
               <path
                 d={hoveredShape.d}
-                fill={
-                  hoveredShape.market.role === "delivery" ? DELIVERY_HOT : HOT
-                }
-                stroke="#ffffff"
-                strokeWidth={0.8}
+                fill={HOVER}
+                stroke={PAPER}
+                strokeWidth={0.6}
                 pointerEvents="none"
               />
             ) : null}
+
+            {/* ties the headline figure to the country it describes */}
+            {labelPoint && leaderEnd ? (
+              <g pointerEvents="none">
+                <line
+                  x1={labelPoint[0] + 4}
+                  y1={labelPoint[1] - 12}
+                  x2={leaderEnd[0]}
+                  y2={leaderEnd[1]}
+                  stroke="#5c2c54"
+                  strokeWidth={0.9}
+                />
+                <circle
+                  cx={leaderEnd[0]}
+                  cy={leaderEnd[1]}
+                  r={2.2}
+                  fill="#5c2c54"
+                />
+                <text
+                  x={labelPoint[0]}
+                  y={labelPoint[1] + 6}
+                  textAnchor="middle"
+                  fontFamily="'Source Serif 4', Georgia, serif"
+                  fontSize="21"
+                  fontWeight="600"
+                  fill="#5c2c54"
+                >
+                  $59.8bn
+                </text>
+                <text
+                  x={labelPoint[0]}
+                  y={labelPoint[1] + 20}
+                  textAnchor="middle"
+                  fontFamily="Lato, system-ui, sans-serif"
+                  fontSize="9.5"
+                  fill="#1a1418"
+                  fillOpacity="0.65"
+                >
+                  United States, 0.22% of GNI
+                </text>
+              </g>
+            ) : null}
           </svg>
 
-          {/* always mounted; only the text inside changes on hover */}
           <div
             ref={tipRef}
             className="pointer-events-none absolute left-0 top-0 z-10 will-change-transform"
             style={{ opacity: hoveredShape ? 1 : 0 }}
           >
-            <span className="inline-block translate-y-3 rounded-lg bg-slate-900 px-2.5 py-1.5 font-mono text-xs font-semibold tabular-nums text-white shadow-lg">
+            <span className="inline-block translate-y-2 rounded bg-brand-deep px-2 py-1 text-xs font-bold tabular-nums text-white">
               {hoveredShape ? outflowLabel(hoveredShape.market) : ""}
             </span>
           </div>
         </div>
 
-        <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-slate-200/70 pt-4 text-[11px] text-slate-600">
-          {LEGEND.map((step) => (
-            <span key={step.label} className="flex items-center gap-2">
-              <span
-                className="h-2.5 w-2.5 rounded-sm"
-                style={{ background: step.fill }}
-              />
-              {step.label}
-            </span>
-          ))}
-          <a
-            href={`${BASE}mlf-partners.html`}
-            className="ml-auto text-xs font-semibold text-[color:var(--accent-strong)] hover:underline"
-          >
-            All markets &rarr;
-          </a>
+        {/* the legend carries the explanation; there is no separate rail */}
+        <div className="mt-2 border-t border-ink/15 pt-4">
+          <p className="text-[11px] text-ink/70">
+            Twenty donor markets shaded by cross-border philanthropic outflow
+            <span className="text-ink/40"> · </span>USD, 2023
+          </p>
+
+          <div className="mt-3 flex flex-wrap items-end gap-x-10 gap-y-4">
+            <div>
+              <div className="flex">
+                {RAMP.map((c) => (
+                  <span
+                    key={c}
+                    className="h-2.5 w-16"
+                    style={{ background: c }}
+                  />
+                ))}
+              </div>
+              <div className="mt-1.5 flex">
+                {RAMP_TICKS.map((t) => (
+                  <span
+                    key={t}
+                    className="w-16 text-[10px] tabular-nums text-ink/60"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-ink/15 text-[11px] text-ink/70 md:border-l md:pl-10">
+              <span className="flex items-center gap-2">
+                <span
+                  className="h-2.5 w-2.5 border border-ink/15"
+                  style={{ background: IN_STUDY }}
+                />
+                Not reported
+              </span>
+              <span className="flex items-center gap-2">
+                <span
+                  className="h-2.5 w-2.5 border border-ink/15"
+                  style={{ background: DELIVERY }}
+                />
+                MLF delivery country
+              </span>
+            </div>
+
+            <p className="text-[11px] italic text-ink/50">
+              Hover for the figure, select a country for its prospects.
+            </p>
+
+            <a
+              href={`${BASE}mlf-partners.html`}
+              className="ml-auto text-sm font-bold text-brand hover:underline"
+            >
+              All twenty markets &rarr;
+            </a>
+          </div>
+
+          <p className="mt-4 text-[11px] leading-relaxed text-ink/50">
+            Outflow and share of GNI: Global Philanthropy Tracker, 2023
+            reference year. Giving rates: CAF World Giving Report. Several
+            markets do not publish a cross-border figure.
+          </p>
         </div>
-      </motion.div>
+        </div>
+      </div>
     </section>
   );
 }
