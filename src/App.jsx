@@ -6,11 +6,11 @@ import {
   useTransform,
 } from "framer-motion";
 import FundingMap from "./components/FundingMap";
-import mainBackground from "./assets/main-background.png";
+import heroWomen from "./assets/women-entrepreneurs-hero.jpg";
+import familyImpact from "./assets/women-family-impact.jpg";
 import placeholderLoan from "./assets/placeholder-loan.jpg";
 import placeholderTraining from "./assets/placeholder-training.jpg";
 import placeholderIndependence from "./assets/placeholder-independence.jpg";
-import placeholderStory from "./assets/placeholder.jpg";
 
 const impactStats = [
   {
@@ -180,7 +180,7 @@ function ActionButton({ children, variant, onPress }) {
 
   const variantClass =
     variant === "accent"
-      ? "bg-[var(--accent)] text-white shadow-[0_16px_40px_rgba(0,168,163,0.35)] hover:bg-[var(--accent-strong)] hover:-translate-y-0.5"
+      ? "bg-[var(--accent)] text-white shadow-[0_4px_16px_rgba(0,0,0,0.2)] hover:shadow-[0_6px_22px_rgba(0,0,0,0.3)] hover:bg-[var(--accent-strong)] hover:-translate-y-0.5"
       : "border border-[var(--line)] bg-[var(--glass)] text-white backdrop-blur-xl hover:bg-white/28 hover:-translate-y-0.5";
 
   const rippleColor =
@@ -236,11 +236,11 @@ function App() {
 
   return (
     <main className="overflow-x-clip">
-      <section ref={heroRef} className="relative min-h-[100svh] w-full">
+      <section ref={heroRef} className="relative min-h-[100vh] w-full flex flex-col justify-center py-20">
         <img
-          src={mainBackground}
-          alt="Women entrepreneurs"
-          className="absolute inset-0 h-full w-full object-cover"
+          src={heroWomen}
+          alt="Empowered African women entrepreneurs supported by MicroLoan Foundation"
+          className="absolute inset-0 h-full w-full object-cover object-[65%_25%]"
         />
         <div
           className="absolute inset-0"
@@ -250,7 +250,7 @@ function App() {
 
         <motion.div
           style={{ y: heroTranslate, opacity: heroFade }}
-          className="shell relative z-10 flex h-full flex-col justify-center pb-12 pt-28 text-white"
+          className="relative z-10 w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-7 xl:px-8 flex flex-col items-start justify-center text-left text-white"
         >
           <motion.p
             initial={{ opacity: 0, y: 16 }}
@@ -440,9 +440,9 @@ function App() {
 
           <div className="relative order-1 min-h-[18rem] lg:order-2 lg:min-h-0">
             <img
-              src={placeholderStory}
-              alt="Members of a MicroLoan Foundation trust group"
-              className="h-full w-full object-cover object-top"
+              src={familyImpact}
+              alt="Women and children supported by MicroLoan Foundation business earnings"
+              className="h-full w-full object-cover object-center"
             />
             {/* narrow seam only, so the image itself stays untouched */}
             <div
