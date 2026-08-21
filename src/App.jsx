@@ -150,6 +150,59 @@ const empoweredWomenStories = [
   },
 ];
 
+const names = [
+  "James Carter",
+  "Olivia Bennett",
+  "Ethan Brooks",
+  "Mia Anderson",
+  "Noah Mitchell",
+  "Ava Richardson",
+  "Liam Parker",
+  "Sophia Williams",
+  "Daniel Thompson",
+  "Emily Johnson",
+  "Kwame Mensah",
+  "Amara Okafor",
+  "Chinedu Obi",
+  "Zainab Bello",
+  "Kofi Asante",
+  "Nia Adeyemi",
+  "Tendai Moyo",
+  "Amina Diallo",
+  "Jabari Kamau",
+  "Lerato Ndlovu",
+  "Kenji Tanaka",
+  "Yuki Nakamura",
+  "Hiroshi Sato",
+  "Mei Chen",
+  "Arjun Patel",
+  "Priya Sharma",
+  "Rohan Mehta",
+  "Ananya Rao",
+  "Min-jun Kim",
+  "Soo-jin Park",
+  "Marcus Johnson",
+  "Taylor Morgan",
+  "Benjamin Davis",
+  "Chloe Wilson",
+  "Jackson Reed",
+  "Grace Thompson",
+  "Malik Washington",
+  "Harper Lewis",
+  "Jordan Cooper",
+  "Madison Harris",
+  "Fatou Diop",
+  "Thabo Molefe",
+  "Ngozi Eze",
+  "Sade Williams",
+  "Moussa Traore",
+  "Aarav Singh",
+  "Sakura Ito",
+  "Wei Zhang",
+  "Priyanka Kapoor",
+  "Dae-hyun Lee",
+];
+
 function ActionButton({ children, variant, onPress }) {
   const [ripples, setRipples] = useState([]);
 
@@ -236,7 +289,10 @@ function App() {
 
   return (
     <main className="overflow-x-clip">
-      <section ref={heroRef} className="relative min-h-[100vh] w-full flex flex-col justify-center py-20">
+      <section
+        ref={heroRef}
+        className="relative min-h-[100vh] w-full flex flex-col justify-center py-20"
+      >
         <img
           src={heroWomen}
           alt="Empowered African women entrepreneurs supported by MicroLoan Foundation"
@@ -298,38 +354,42 @@ function App() {
 
       <section className="relative border-t border-rule bg-paper py-24">
         <div className="shell">
-        <motion.h2
-          {...fadeUp}
-          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
-          className="font-display display-lg font-semibold tracking-[-0.02em] text-ink"
-        >
-          Small loans, repaid and lent again
-        </motion.h2>
+          <motion.h2
+            {...fadeUp}
+            transition={{
+              duration: 0.85,
+              ease: [0.22, 1, 0.36, 1],
+              delay: 0.06,
+            }}
+            className="font-display display-lg font-semibold tracking-[-0.02em] text-ink"
+          >
+            Small loans, repaid and lent again
+          </motion.h2>
 
-        <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_22rem] lg:gap-16">
-          <p className="measure text-lg leading-relaxed text-ink/70">
-            A loan of around £80 buys stock, tools or seed. It is repaid over
-            a year into a local fund and lent again to the next woman in the
-            group, so the same capital keeps working long after the first
-            business is standing.
-          </p>
+          <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_22rem] lg:gap-16">
+            <p className="measure text-lg leading-relaxed text-ink/70">
+              A loan of around £80 buys stock, tools or seed. It is repaid over
+              a year into a local fund and lent again to the next woman in the
+              group, so the same capital keeps working long after the first
+              business is standing.
+            </p>
 
-          <dl className="divide-y divide-rule border-y border-rule">
-            {impactStats.map((stat) => (
-              <div key={stat.label} className="py-6 first:pt-0 last:pb-0">
-                <dt className="font-display text-[clamp(2.25rem,3.2vw,3rem)] font-semibold leading-none tracking-[-0.03em] text-ink">
-                  {stat.value}
-                </dt>
-                <dd className="mt-2 text-base font-bold text-ink">
-                  {stat.label}
-                </dd>
-                <dd className="mt-1.5 text-sm leading-relaxed text-ink/65">
-                  {stat.detail}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </div>
+            <dl className="divide-y divide-rule border-y border-rule">
+              {impactStats.map((stat) => (
+                <div key={stat.label} className="py-6 first:pt-0 last:pb-0">
+                  <dt className="font-display text-[clamp(2.25rem,3.2vw,3rem)] font-semibold leading-none tracking-[-0.03em] text-ink">
+                    {stat.value}
+                  </dt>
+                  <dd className="mt-2 text-base font-bold text-ink">
+                    {stat.label}
+                  </dd>
+                  <dd className="mt-1.5 text-sm leading-relaxed text-ink/65">
+                    {stat.detail}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </div>
       </section>
 
@@ -337,84 +397,92 @@ function App() {
 
       <section className="relative border-t border-rule bg-paper py-24">
         <div className="shell">
-        <motion.h3
-          {...fadeUp}
-          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
-          className="font-display display-lg font-semibold tracking-[-0.02em] text-ink"
-        >
-          Who we build with
-        </motion.h3>
+          <motion.h3
+            {...fadeUp}
+            transition={{
+              duration: 0.85,
+              ease: [0.22, 1, 0.36, 1],
+              delay: 0.06,
+            }}
+            className="font-display display-lg font-semibold tracking-[-0.02em] text-ink"
+          >
+            Who we build with
+          </motion.h3>
 
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {keyPartners.map((partner, index) => (
-            <motion.article
-              key={partner.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{
-                duration: 0.75,
-                delay: 0.04 * index,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="rounded-2xl border border-white/55 bg-white/70 p-5 shadow-glass backdrop-blur-xl"
-            >
-              <div className="mb-4 flex items-center gap-3">
-                <img
-                  src={partner.logo}
-                  alt={`${partner.name} logo`}
-                  loading="lazy"
-                  className="h-10 w-10 rounded-xl border border-slate-200/70 bg-white object-contain p-1.5"
-                />
-                <p className="text-sm font-semibold leading-snug text-slate-800">
-                  {partner.name}
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {keyPartners.map((partner, index) => (
+              <motion.article
+                key={partner.name}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{
+                  duration: 0.75,
+                  delay: 0.04 * index,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="rounded-2xl border border-white/55 bg-white/70 p-5 shadow-glass backdrop-blur-xl"
+              >
+                <div className="mb-4 flex items-center gap-3">
+                  <img
+                    src={partner.logo}
+                    alt={`${partner.name} logo`}
+                    loading="lazy"
+                    className="h-10 w-10 rounded-xl border border-slate-200/70 bg-white object-contain p-1.5"
+                  />
+                  <p className="text-sm font-semibold leading-snug text-slate-800">
+                    {partner.name}
+                  </p>
+                </div>
+                <p className="text-sm leading-relaxed text-slate-600">
+                  {partner.description}
                 </p>
-              </div>
-              <p className="text-sm leading-relaxed text-slate-600">
-                {partner.description}
-              </p>
-            </motion.article>
-          ))}
-        </div>
+              </motion.article>
+            ))}
+          </div>
         </div>
       </section>
 
       <section className="relative border-t border-rule bg-paper-deep py-24">
         <div className="shell">
-        <motion.h4
-          {...fadeUp}
-          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
-          className="font-display display-lg font-semibold tracking-[-0.02em] text-ink"
-        >
-          Latest thinking, campaigns and updates
-        </motion.h4>
+          <motion.h4
+            {...fadeUp}
+            transition={{
+              duration: 0.85,
+              ease: [0.22, 1, 0.36, 1],
+              delay: 0.06,
+            }}
+            className="font-display display-lg font-semibold tracking-[-0.02em] text-ink"
+          >
+            Latest thinking, campaigns and updates
+          </motion.h4>
 
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {newsAndBlogPosts.map((post, index) => (
-            <motion.article
-              key={post.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{
-                duration: 0.75,
-                delay: 0.05 * index,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="rounded-2xl border border-slate-200/80 bg-white/85 p-5 shadow-glass backdrop-blur-xl"
-            >
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                Post {index + 1}
-              </p>
-              <h5 className="font-display mt-3 text-xl font-semibold leading-tight tracking-[-0.02em] text-slate-900">
-                {post.title}
-              </h5>
-              <p className="mt-3 text-sm leading-relaxed text-slate-600">
-                {post.snippet}
-              </p>
-            </motion.article>
-          ))}
-        </div>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {newsAndBlogPosts.map((post, index) => (
+              <motion.article
+                key={post.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{
+                  duration: 0.75,
+                  delay: 0.05 * index,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="rounded-2xl border border-slate-200/80 bg-white/85 p-5 shadow-glass backdrop-blur-xl"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  Post {index + 1}
+                </p>
+                <h5 className="font-display mt-3 text-xl font-semibold leading-tight tracking-[-0.02em] text-slate-900">
+                  {post.title}
+                </h5>
+                <p className="mt-3 text-sm leading-relaxed text-slate-600">
+                  {post.snippet}
+                </p>
+              </motion.article>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -480,114 +548,155 @@ function App() {
 
       <section className="relative border-t border-rule bg-paper py-24">
         <div className="shell">
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="rounded-3xl border border-white/65 bg-white/80 p-7 shadow-glass backdrop-blur-xl sm:p-10"
-        >
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-            Newsletter Signup
-          </p>
-          <h4 className="font-display mt-4 text-3xl font-semibold tracking-[-0.03em] text-slate-900 sm:text-4xl">
-            Stay connected to new stories and campaigns.
-          </h4>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
-            Get updates on impact milestones, fundraising campaigns, and
-            opportunities to support women entrepreneurs.
-          </p>
-
-          <form
-            className="mt-7 flex flex-col gap-3 sm:flex-row"
-            onSubmit={(event) => event.preventDefault()}
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.35 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="mb-6 rounded-3xl border border-white/65 bg-white/80 py-5 shadow-glass backdrop-blur-xl"
+            aria-label="Supporter names"
           >
-            <label htmlFor="newsletter-email" className="sr-only">
-              Email address
-            </label>
-            <input
-              id="newsletter-email"
-              type="email"
-              placeholder="Enter your email"
-              className="w-full rounded-full border border-slate-300 bg-white px-5 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
-            />
-            <button
-              type="submit"
-              className="ripple-btn rounded-full bg-slate-900 px-8 py-3 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-slate-800"
+            <h4 className="px-6 font-display text-2xl font-semibold tracking-[-0.03em] text-slate-900 sm:text-3xl">
+              Top Individual Donors
+            </h4>
+            <div className="name-reel mt-4 overflow-hidden flex">
+              {" "}
+              <div className="name-reel mt-4 overflow-hidden flex">
+                {/* 
+              1. Converted to motion.div 
+              2. Added 'flex gap-3 w-max' so items sit in a row and don't wrap 
+              3. Added continuous animation to slide exactly half of the duplicated list
+            */}
+                <motion.div
+                  className="name-reel-track flex w-max gap-3 px-3"
+                  animate={{ x: [0, "-50%"] }}
+                  transition={{
+                    repeat: Infinity,
+                    ease: "linear",
+                    duration: 70, // Lower this number to make it faster
+                  }}
+                >
+                  {[...names, ...names].map((name, index) => (
+                    <span
+                      key={`${name}-${index}`}
+                      className="whitespace-nowrap rounded-full border border-slate-200/80 bg-white px-4 py-2 text-sm font-semibold text-slate-700"
+                    >
+                      {name}
+                    </span>
+                  ))}
+                </motion.div>
+              </div>{" "}
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.35 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="rounded-3xl border border-white/65 bg-white/80 p-7 shadow-glass backdrop-blur-xl sm:p-10"
+          >
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              Newsletter Signup
+            </p>
+            <h4 className="font-display mt-4 text-3xl font-semibold tracking-[-0.03em] text-slate-900 sm:text-4xl">
+              Stay connected to new stories and campaigns.
+            </h4>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
+              Get updates on impact milestones, fundraising campaigns, and
+              opportunities to support women entrepreneurs.
+            </p>
+
+            <form
+              className="mt-7 flex flex-col gap-3 sm:flex-row"
+              onSubmit={(event) => event.preventDefault()}
             >
-              Subscribe
-            </button>
-          </form>
-        </motion.div>
+              <label htmlFor="newsletter-email" className="sr-only">
+                Email address
+              </label>
+              <input
+                id="newsletter-email"
+                type="email"
+                placeholder="Enter your email"
+                className="w-full rounded-full border border-slate-300 bg-white px-5 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+              />
+              <button
+                type="submit"
+                className="ripple-btn rounded-full bg-slate-900 px-8 py-3 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-slate-800"
+              >
+                Subscribe
+              </button>
+            </form>
+          </motion.div>
         </div>
       </section>
 
       <section className="relative border-t border-rule bg-paper-deep py-24">
         <div className="shell">
-        <div className="min-h-[255vh] rounded-[2.2rem] bg-slate-950/96 px-6 py-14 text-white sm:px-10 lg:px-14">
-          <div className="grid gap-10 lg:grid-cols-[minmax(280px,0.85fr)_1.15fr]">
-            <div className="lg:sticky lg:top-20 lg:h-fit">
-              <motion.p
-                {...fadeUp}
-                className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand"
-              >
-                How It Works
-              </motion.p>
-              <motion.h3
-                {...fadeUp}
-                transition={{
-                  duration: 0.9,
-                  ease: [0.22, 1, 0.36, 1],
-                  delay: 0.06,
-                }}
-                className="font-display mt-4 text-4xl font-semibold leading-[1.03] tracking-[-0.035em] text-slate-900 sm:text-5xl"
-              >
-                The MicroLoan Journey
-              </motion.h3>
-              <motion.p
-                {...fadeUp}
-                transition={{
-                  duration: 0.9,
-                  ease: [0.22, 1, 0.36, 1],
-                  delay: 0.12,
-                }}
-                className="mt-6 max-w-sm text-base leading-relaxed text-slate-900"
-              >
-                The left story stays anchored while each transformation step
-                flows past it.
-              </motion.p>
-            </div>
-
-            <div>
-              {journeySteps.map((step, index) => (
-                <motion.article
-                  key={step.title}
-                  initial={{ opacity: 0.12, y: 74 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ amount: 0.45 }}
-                  transition={{
-                    duration: 0.86,
-                    delay: index * 0.08,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                  className="mb-20 rounded-3xl border border-slate-200/80 bg-white/80 p-5 shadow-glass backdrop-blur-xl sm:p-8"
+          <div className="min-h-[255vh] rounded-[2.2rem] bg-slate-950/96 px-6 py-14 text-white sm:px-10 lg:px-14">
+            <div className="grid gap-10 lg:grid-cols-[minmax(280px,0.85fr)_1.15fr]">
+              <div className="lg:sticky lg:top-20 lg:h-fit">
+                <motion.p
+                  {...fadeUp}
+                  className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand"
                 >
-                  <img
-                    src={step.image}
-                    alt={step.title}
-                    className="h-[300px] w-full rounded-2xl object-cover shadow-[0_28px_70px_rgba(0,0,0,0.35)] sm:h-[360px] lg:h-[420px]"
-                  />
-                  <h4 className="font-display mt-7 text-3xl font-semibold tracking-[-0.03em] text-slate-900 sm:text-4xl">
-                    {step.title}
-                  </h4>
-                  <p className="mt-4 max-w-xl text-base leading-relaxed text-slate-700 sm:text-lg">
-                    {step.copy}
-                  </p>
-                </motion.article>
-              ))}
+                  How It Works
+                </motion.p>
+                <motion.h3
+                  {...fadeUp}
+                  transition={{
+                    duration: 0.9,
+                    ease: [0.22, 1, 0.36, 1],
+                    delay: 0.06,
+                  }}
+                  className="font-display mt-4 text-4xl font-semibold leading-[1.03] tracking-[-0.035em] text-slate-900 sm:text-5xl"
+                >
+                  The MicroLoan Journey
+                </motion.h3>
+                <motion.p
+                  {...fadeUp}
+                  transition={{
+                    duration: 0.9,
+                    ease: [0.22, 1, 0.36, 1],
+                    delay: 0.12,
+                  }}
+                  className="mt-6 max-w-sm text-base leading-relaxed text-slate-900"
+                >
+                  The left story stays anchored while each transformation step
+                  flows past it.
+                </motion.p>
+              </div>
+
+              <div>
+                {journeySteps.map((step, index) => (
+                  <motion.article
+                    key={step.title}
+                    initial={{ opacity: 0.12, y: 74 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ amount: 0.45 }}
+                    transition={{
+                      duration: 0.86,
+                      delay: index * 0.08,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    className="mb-20 rounded-3xl border border-slate-200/80 bg-white/80 p-5 shadow-glass backdrop-blur-xl sm:p-8"
+                  >
+                    <img
+                      src={step.image}
+                      alt={step.title}
+                      className="h-[300px] w-full rounded-2xl object-cover shadow-[0_28px_70px_rgba(0,0,0,0.35)] sm:h-[360px] lg:h-[420px]"
+                    />
+                    <h4 className="font-display mt-7 text-3xl font-semibold tracking-[-0.03em] text-slate-900 sm:text-4xl">
+                      {step.title}
+                    </h4>
+                    <p className="mt-4 max-w-xl text-base leading-relaxed text-slate-700 sm:text-lg">
+                      {step.copy}
+                    </p>
+                  </motion.article>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
         </div>
       </section>
 
@@ -671,37 +780,37 @@ function App() {
 
       <section className="relative border-t border-rule bg-paper py-24">
         <div className="shell">
-        <motion.div
-          initial={{ opacity: 0, y: 36 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="rounded-[2.25rem] border border-white/60 bg-white/70 px-8 py-16 shadow-glass backdrop-blur-xl"
-        >
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand">
-            Final Call
-          </p>
-          <h5 className="font-display mt-5 text-4xl font-semibold tracking-[-0.03em] text-slate-900 sm:text-5xl lg:text-6xl">
-            Make an Impact Today
-          </h5>
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
-            Every contribution helps fund a woman entrepreneur, strengthen a
-            family, and uplift an entire community.
-          </p>
-          <div className="mt-9 flex items-center justify-center">
-            <button
-              type="button"
-              className="ripple-btn rounded-full bg-slate-900 px-9 py-3.5 text-base font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-slate-800"
-            >
-              Donate
-            </button>
-          </div>
-        </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 36 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            className="rounded-[2.25rem] border border-white/60 bg-white/70 px-8 py-16 shadow-glass backdrop-blur-xl"
+          >
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand">
+              Final Call
+            </p>
+            <h5 className="font-display mt-5 text-4xl font-semibold tracking-[-0.03em] text-slate-900 sm:text-5xl lg:text-6xl">
+              Make an Impact Today
+            </h5>
+            <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
+              Every contribution helps fund a woman entrepreneur, strengthen a
+              family, and uplift an entire community.
+            </p>
+            <div className="mt-9 flex items-center justify-center">
+              <button
+                type="button"
+                className="ripple-btn rounded-full bg-slate-900 px-9 py-3.5 text-base font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-slate-800"
+              >
+                Donate
+              </button>
+            </div>
+          </motion.div>
 
-        <footer className="mt-10 border-t border-slate-300/70 pt-8 text-sm text-slate-500">
-          MicroLoan Foundation UK · Presentation Concept · Built for judging
-          panel showcase
-        </footer>
+          <footer className="mt-10 border-t border-slate-300/70 pt-8 text-sm text-slate-500">
+            MicroLoan Foundation UK · Presentation Concept · Built for judging
+            panel showcase
+          </footer>
         </div>
       </section>
     </main>

@@ -93,6 +93,47 @@ body {
   }
 }
 
+.name-reel {
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 7%,
+    #000 93%,
+    transparent 100%
+  );
+}
+
+.name-reel-track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: 0.75rem;
+  padding-inline: 1rem;
+  animation: name-reel-scroll 42s linear infinite;
+  transform: translateX(0);
+  will-change: transform;
+}
+
+.name-reel:hover .name-reel-track {
+  animation-play-state: paused;
+}
+
+@keyframes name-reel-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .name-reel-track {
+    animation: none;
+  }
+}
+
 /* ---- layout system -------------------------------------------------
    One shell for section content, a wider measure cap for prose, and a
    bleed escape for bands that should run edge to edge. max-w-7xl left
